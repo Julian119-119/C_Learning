@@ -18,9 +18,24 @@
 ---
 ## 學習進度表
 
-| Chapter | Topic        | Status |        Notes & Code        |
-| :-----: | :----------- | :----: | :------------------------: |
-| **02**  | Fundamentals |   ✅    | [View](./Ch2_fundamentals) |
+| Chapter | Topic                                   | Status |                 Notes & Code                 |
+| :-----: | :-------------------------------------- | :----: | :------------------------------------------: |
+| **02**  | Fundamentals                            |   ✅    |          [View](./Ch2_fundamentals)          |
+| **03**  | Formatted Input/Output                  |   ✅    | [View](./Ch3_Ch3_formatted-input-and-output) |
+| **04**  | Expressions                             |   🔄   |                                              |
+| **05**  | Selection Statements                    |   ⬜    |                                              |
+| **06**  | Loops                                   |   ⬜    |                                              |
+| **07**  | Basic Types                             |   ⬜    |                                              |
+| **08**  | Arrays                                  |   ⬜    |                                              |
+| **09**  | Functions                               |   ⬜    |                                              |
+| **10**  | Program Organization                    |   ⬜    |                                              |
+| **11**  | Pointers                                |   ⬜    |                                              |
+| **12**  | Pointers and Arrays                     |   ⬜    |                                              |
+| **13**  | Strings                                 |   ⬜    |                                              |
+| **14**  | The Preprocessor                        |   ⬜    |                                              |
+| **15**  | Writing Large Programs                  |   ⬜    |                                              |
+| **16**  | Structures, Unions, and<br>Enumerations |   ⬜    |                                              |
+| **17**  | Advanced Uses of Pointers               |   ⬜    |                                              |
 
 
 *(符號說明：✅ 完成 / 🔄 進行中 / ⬜ 尚未開始)*
