@@ -1,4 +1,4 @@
-#  C program: a modern approach Ch.2 note 
+#  C program: a modern approach Ch.3 note 
 <br>
 
 ## I. printf
