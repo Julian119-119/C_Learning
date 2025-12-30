@@ -20,9 +20,9 @@
 
 | Chapter | Topic                                   | Status |                 Notes & Code                 |
 | :-----: | :-------------------------------------- | :----: | :------------------------------------------: |
-| **02**  | Fundamentals                            |   ✅    |          [View](./Ch2_fundamentals)          |
-| **03**  | Formatted Input/Output                  |   ✅    | [View](./Ch3_Ch3_formatted-input-and-output) |
-| **04**  | Expressions                             |   🔄   |                                              |
+| **02**  | Fundamentals                            |   ✅    |          [View](./Ch2_fundamentals)         |
+| **03**  | Formatted Input/Output                  |   ✅    | [View](./Ch3_formatted-input-and-output)    |
+| **04**  | Expressions                             |   ✅    | [view](./Ch4_expression)                    |
 | **05**  | Selection Statements                    |   ⬜    |                                              |
 | **06**  | Loops                                   |   ⬜    |                                              |
 | **07**  | Basic Types                             |   ⬜    |                                              |
