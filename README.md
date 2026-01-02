@@ -23,7 +23,7 @@
 | **02**  | Fundamentals                            |   ✅    |        [View](./Ch2_fundamentals)        |
 | **03**  | Formatted Input/Output                  |   ✅    | [View](./Ch3_formatted-input-and-output) |
 | **04**  | Expressions                             |   ✅    |         [view](./Ch4_expression)         |
-| **05**  | Selection Statements                    |   🔄   |       [view](./Ch5_selection-statement)  |
+| **05**  | Selection Statements                    |   ✅   |       [view](./Ch5_selection-statement)  |
 | **06**  | Loops                                   |   ⬜    |                                          |
 | **07**  | Basic Types                             |   ⬜    |                                          |
 | **08**  | Arrays                                  |   ⬜    |                                          |
