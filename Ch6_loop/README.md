@@ -2,13 +2,14 @@
 ## Program overview
 
 
-| 題號    | 功能                                 | 觀念                        | 連結                     |
-| ----- | ---------------------------------- | ------------------------- | ---------------------- |
-| 範例一   | 顯示 1 到輸入的數字的平方 (while statement)   | 用 while statement 由小排序到大  | [view](./square.c)     |
-| 範例二   | 加總一連串輸入的數字                         | 用 while statement 加總數字    | [view](./sum.c)        |
-| 範例三   | 計算整數的位數                            | 判斷用 do 還是 while statement | [view](./numdiogits.c) |
-| 範例四   | 顯示 1 到輸入的數字的平方 (for statement)     | 將 while 改成 for statement  | [view](./square2.c)    |
-| 範例四v2 | 顯示 1 到輸入的數字的平方 (for statement)，打法二 | 同一個 program 有不同種打法        | [view](square3.c)      |
+| 題號    | 功能                                 | 觀念                                          | 連結                     |
+| ----- | ---------------------------------- | ------------------------------------------- | ---------------------- |
+| 範例一   | 顯示 1 到輸入的數字的平方 (while statement)   | 用 while statement 由小排序到大                    | [view](./square.c)     |
+| 範例二   | 加總一連串輸入的數字                         | 用 while statement 加總數字                      | [view](./sum.c)        |
+| 範例三   | 計算整數的位數                            | 判斷用 do 還是 while statement                   | [view](./numdiogits.c) |
+| 範例四   | 顯示 1 到輸入的數字的平方 (for statement)     | 將 while 改成 for statement                    | [view](./square2.c)    |
+| 範例四v2 | 顯示 1 到輸入的數字的平方 (for statement)，打法二 | 同一個 program 有不同種打法                          | [view](square3.c)      |
+| 範例五   | 計算收支的平衡                            | 綜和利用 for if switch break continue statement | [view](./checking.c)   |
 <br><br>
 
 ---
@@ -448,3 +449,181 @@
 	- 如果 i == 0 的話就會直接進到下一輪的 test
 
 <br>
+
+#### 三， The goto Statement
+
+- 也是屬於 Jump statement
+- 是用來跳到在 function 內任何的 statement 
+- 但 `goto` 因為可以跳來跳去的特性使得它會讓 program 變得更難讀
+- 是用 lable 來標注要跳到哪裡<br>lable 的 form:
+	```c
+	identifier : statement
+	```
+- 以及用 goto statement 來寫說此時要跳到 lable<br>goto statement 的 form:
+	```c
+	goto identifier ;
+	```
+- E.g:
+	```c
+	for (d = 2; d < n; d++)
+	  if (n % d == 0)
+	    goto done;
+	
+	done:
+	if (d < n)
+	  printf("%d is divisible by %d\n", n, d)
+	else 
+	  printf("%d is prime\n", n)
+	```
+- 雖然因為 `break`, `continue`, `return` 以及 `exit` 使得較少有地方會用到 `goto`，但如果要跳脫出多層的結構的話，`goto` 就會是好用的<br>E.g: 跳脫出 while 與 switch statement
+	```c
+	while (...) {
+	  switch (...) {
+	  ...
+	  goto loop_done;
+	  ...
+	  }
+	}
+	loop_done: ...
+	```
+
+<br>
+
+#### 四，範例五：Balancing a Checkbook
+
+- [[C_Programming-A_Modern_Approach_ocr_Ch6.pdf#page=16|題目]]
+- program:
+	```c
+	// Balance a checkbook
+	
+	#include <stdio.h>
+	
+	int main(void)
+	{
+	  int cmd;
+	  float balance = 0.00f, credit, debit;
+	
+	  printf("*** ACME checkbook-balancing program ***\n");
+	  printf("Commands: 0=clear, 1=credit, 2=debit, 3=balance, 4=exit\n");
+	  printf("\n");
+	
+	
+	
+	  for (;;) {
+	    printf("Enter command: ");
+	    scanf("%d", &cmd);
+	    if (cmd > 4 || cmd < 0) {
+	      printf("Irregular command, please re-enter command\n");
+	      continue;
+	    }
+	    else switch (cmd) {
+	      case 0:  balance = 0;
+	               credit = 0;
+	               break;
+	      case 1:  printf("Enter amount of credit: ");
+	               scanf("%f", &credit);
+	               balance += credit;
+	               break;
+	      case 2:  printf("Enter amount of debit: ");
+	               scanf("%f", &debit);
+	               balance -= debit;
+	               break;
+	      case 3:  printf("Current balance: $%.2f\n", balance);
+	               break;
+	      case 4:  goto exit;
+	    }
+	  }
+	
+	      exit: return 0;
+	}
+	```
+- output:
+	```
+	Enter command: 6
+	Irregular command, please re-enter command
+	Enter command: 645465465Irregular command, please re-enter command
+	Irregular command, please re-enter command
+	Enter command: 1
+	Enter amount of credit: 6481.21  
+	Enter command: 1
+	Enter amount of credit: 3546.88
+	Enter command: 2
+	Enter amount of debit: 6519873.1
+	Enter command: 1
+	Enter amount of credit: 68431976.5146
+	Enter command: 3
+	Current balance: $61922132.00
+	Enter command: 4
+	```
+
+- 我自己增加了一個如果輸入的指令不在 0 到 4 之間的時候就顯示 「Irregular command, please re-enter command」的 if statement
+- program 用途：計算總收支。當輸入 1 的時候就會請你輸入 credit，2 的時候就輸入 debit，3 的時候就顯示 balance，4 就離開，0 的話是清空目前的所有紀錄
+- 寫 program 的想法:
+	1. 在宣告的部份基本上我是先保留位置的，等到後面有要再寫上去
+	2. 因為只有 balance 不是被輸入的，所以只有它用 initialize
+	3. 因為要不斷的請使用者輸入 command，所以必須要用無限的 loop
+	4. 在每一次的 loop 開端就要輸入 command
+	5. 輸入完後再判斷 command 是否合規
+	6. 如果不合規就先執行 `printf` 再用 `continue` 重新執行 loop
+	7. 否則開始判斷輸入的 command 要採取什麼行動。也因如此才用 switch statement
+	8. 在 command 為 4 的時候就用 `goto` 去跳脫 switch 與 for statement (因為有兩層，所以只能用 `goto`)
+
+<br><br>
+
+## VI. The Null Statement
+
+- 就是空的 statement<br>E.g:
+	```c
+	i = 0; ; j = 1;
+	```
+	這邊有三個 statement，而在兩個 ; 之間的就是 Null statement
+- 用途：用在 loop body 為空的時候<br>E.g:
+	```c
+	for (d = 2; d < n; d++)
+	  if (n % d == 0)
+	    break;
+	```
+	如果將 if statement 合併在 for statement 就會變成
+	```c
+	for (d = 2; d < n && n % d != 0; d++);
+	  // empty loop body
+	```
+	也就是說，如果 d < n && n % d != 0不成立就停止 loop，否則就繼續執行 d++ 與判斷式 (但沒有執行額外的 statement)
+
+<br><br>
+
+---
+# Exercises
+
+## Ex.1: while statement 的解讀
+我的答案：
+```
+Ans: 1 2 4 8 16 32 64 128
+Reason: 照著 while statement 的邏輯下去讀而已
+```
+<br>
+
+## Ex.2: do statement 的解讀
+我的答案：
+```
+Ans: 9384 938 93 9
+Reason: 照著 do statement 的邏輯下去讀
+```
+
+<br>
+
+## Ex.3: for satement 的解讀
+我的答案：
+```
+Ans:5 4 3 2
+Reason: 在判斷 i > 0, j > 0 的時候其實是判斷 j > 0，因為中間沒有 && 或 ||，所以導致了 i > 0 這的 expression 的結果被直接丟棄
+```
+
+<br>
+
+## Ex.4: 判斷 for statement 的語意是否相同
+我的答案：
+```
+Ans: (b)
+Reason: 因為 i++ 是在 expr2 的位置，所以在執行 loop body 的時候會用 1 而不是 0
+```
