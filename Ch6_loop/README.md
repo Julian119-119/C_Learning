@@ -2,14 +2,21 @@
 ## Program overview
 
 
-| 題號    | 功能                                 | 觀念                                          | 連結                     |
-| ----- | ---------------------------------- | ------------------------------------------- | ---------------------- |
-| 範例一   | 顯示 1 到輸入的數字的平方 (while statement)   | 用 while statement 由小排序到大                    | [view](./square.c)     |
-| 範例二   | 加總一連串輸入的數字                         | 用 while statement 加總數字                      | [view](./sum.c)        |
-| 範例三   | 計算整數的位數                            | 判斷用 do 還是 while statement                   | [view](./numdiogits.c) |
-| 範例四   | 顯示 1 到輸入的數字的平方 (for statement)     | 將 while 改成 for statement                    | [view](./square2.c)    |
-| 範例四v2 | 顯示 1 到輸入的數字的平方 (for statement)，打法二 | 同一個 program 有不同種打法                          | [view](square3.c)      |
-| 範例五   | 計算收支的平衡                            | 綜和利用 for if switch break continue statement | [view](./checking.c)   |
+| 題號                   | 功能                               | 觀念                                          | 連結                                      |
+| -------------------- | -------------------------------- | ------------------------------------------- | --------------------------------------- |
+| 範例一                  | 顯示 1 到輸入的數字的平方 (while statement) | 用 while statement 由小排序到大                    | [view](./square.c)                      |
+| 範例二                  | 加總一連串輸入的數字                       | 用 while statement 加總數字                      | [view](./sum.c)                         |
+| 範例三                  | 計算整數的位數                          | 判斷用 do 還是 while statement                   | [view](./numdiogits.c)                  |
+| 範例四                  | 顯示 1 到輸入的數字的平方 (for statement)   | 將 while 改成 for statement                    | [view](./square2.c)                     |
+| 範例四v2                | 同上                               | 同一個 program 有不同種打法                          | [view](square3.c)                       |
+| 範例五                  | 計算收支的平衡                          | 綜和利用 for if switch break continue statement | [view](./checking.c)                    |
+| project  2 version 1 | 找尋最大公因數                          | 利用 for statement 與暴力破解法直接找出最大公因數            | [view](./programming-project_Ch6_2v1.c) |
+| project 2 version 2  | 同上                               | 將 version 1 的 program 修改到更易讀                | [view](./programming-project_Ch6_2v2.c) |
+| project 2 version 3  | 同上                               | 利用歐基里得演算法求出最大公因數                            | [view](./programming-project_Ch6_2v3.c) |
+| project 4            | 修改 broker.c                      | 用無限迴圈寫出可重複執行的 program                       | [view](./programming-project_Ch6_4.c)   |
+| project 6            | 顯示出 1 到 n 中偶數的平方                 | 用 for statement 去寫出 loop                    | [view](./programming-project_Ch6_6.c)   |
+| project 8            | 顯示出日曆                            | 綜和利用 for 和 if statement 去顯示出日曆              | [view](./programming-project_Ch6_8v1.c) |
+| project 8 version 2  | 同上                               | 修改以上的 program 的邏輯                           | [view](./programming-project_Ch6_8v2.c) |
 <br><br>
 
 ---
@@ -570,7 +577,7 @@
 
 <br><br>
 
-## VI. The Null Statement
+#### VI. The Null Statement
 
 - 就是空的 statement<br>E.g:
 	```c
@@ -593,9 +600,9 @@
 <br><br>
 
 ---
-# Exercises
+## Exercises
 
-## Ex.1: while statement 的解讀
+### Ex.1: while statement 的解讀
 我的答案：
 ```
 Ans: 1 2 4 8 16 32 64 128
@@ -603,7 +610,7 @@ Reason: 照著 while statement 的邏輯下去讀而已
 ```
 <br>
 
-## Ex.2: do statement 的解讀
+### Ex.2: do statement 的解讀
 我的答案：
 ```
 Ans: 9384 938 93 9
@@ -612,7 +619,7 @@ Reason: 照著 do statement 的邏輯下去讀
 
 <br>
 
-## Ex.3: for satement 的解讀
+### Ex.3: for satement 的解讀
 我的答案：
 ```
 Ans:5 4 3 2
@@ -621,9 +628,391 @@ Reason: 在判斷 i > 0, j > 0 的時候其實是判斷 j > 0，因為中間沒�
 
 <br>
 
-## Ex.4: 判斷 for statement 的語意是否相同
+### Ex.4: 判斷 for statement 的語意是否相同
 我的答案：
 ```
 Ans: (b)
 Reason: 因為 i++ 是在 expr2 的位置，所以在執行 loop body 的時候會用 1 而不是 0
 ```
+<br>
+
+### Ex.5: 判斷 for, while, do statement 的意思
+我的答案：
+```
+Ans: (c)
+Reason: 因為 while 與 for statement 都是可能會執行 0 次的 loop body，但 do statement 是至少會執行一次
+```
+<br>
+
+### Ex.6: 將 while statement 換成 for statement 
+我的答案：
+```c
+for (i = 1; i <= 128; i *= 2)
+  printf("%d", i);
+```
+<br>
+
+### Ex.7: do statement 換成 for statement
+我的答案：
+1. program:
+	```c
+	for (i = 9384; i > 0; i /= 10)
+	  printf("%d ", i);
+	```
+2. Reason:<br>雖然一般狀況下的 do statement 不能直接換過去 do statement，因為 do 會先至少執行一次。可是這一題恰好在一開始時就是為真，所以可以換過去
+<br>
+
+### Ex.8: for statement 的解讀--2
+我的答案：
+```
+Ans:10 5 3 2 1
+Reason: 因為 i 為 integer，所以會直接把小數部份捨去
+```
+<br>
+
+### Ex.9: 將 for statement 換成 while statement
+我的答案：
+```c
+i = 10;
+while (i >= 1) {
+  printf("%d ", i++);
+  i /= 2;
+}
+```
+<br>
+
+### Ex.10: continue 換成 goto
+我的答案：
+```
+Ans: 
+	for (;;) {
+	  ...
+	  statement
+	  goto : identifier
+	  ...
+	  identifier: ;
+	}  
+
+Reason: 將 identifier 放在 } 前，且 statement 的部份放 null statement 就可以了
+```
+<br>
+
+### Ex.11:
+我的答案：
+```
+Ans: 20
+Reason: 照著 program 的順序讀下去，當 i % 2 為真（也就是非零的時候），就會進行下一輪的 loop ，但如果為假（也就是為 0），才會加到 sum 內
+```
+<br>
+
+### Ex.12: 修改 for statement
+我的答案：
+```c
+for (d = 2; (d * d) <= n; d++)
+  if (n & d == 0)
+    break;
+```
+<br>
+
+### Ex.13: 修改 for statement--2
+我的答案：
+```c
+for (n = 0; m > 0; m /= 2, n++) ;
+```
+<br>
+
+### Ex.14: if statement 中的 null statement
+我的答案：
+- program:
+	```c
+	if (n != 0 && n % 2 == 0)
+	  printf("n is even\n");
+	```
+- Reason:<br>因為 0 / 2 也是餘 0，且他在 if 後面多打了一個 ; ，導致產生了 null statement
+<br><br>
+
+---
+## Programming Projects
+### Proj.2: 找尋最大公因數
+
+##### 一，program 的 version 解釋
+1. version 1 為我最一開始在還沒看 Hint 時寫的 program，我是用暴力破解法去寫的
+2. version 2 為我將 for 改成了 while statement，因為覺得在這裡用 while statement 會讓 program 更易讀
+3. version 3 為我看了 Hint 後用歐基里得演算法去寫的
+##### 二，program:
+###### version 1
+```c programming-project_Ch6_2v1.c
+// This is my version 2 program for programming project 2 
+// in C Programming: a modern approach Ch6
+#include <stdio.h>
+
+int main(void)
+{
+  int num1, num2, gcd;
+
+  printf("Enter two integers: ");
+  scanf("%d %d", &num1, &num2);
+
+  if (num1 <= num2)
+    gcd = num1;
+  else
+    gcd = num2;
+  for (; num1 % gcd != 0 || num2 % gcd !=0; gcd--) ;
+
+  printf("Greatest common divisor: %d\n", gcd);
+
+  return 0;
+}
+```
+###### version 2
+```c
+// This is my version 2 program for programming project 2 
+// in C Programming: a modern approach Ch6
+
+#include <stdio.h>
+
+int main(void)
+{
+  int num1, num2, gcd;
+
+  printf("Enter two integers: ");
+  scanf("%d %d", &num1, &num2);
+
+  if (num1 <= num2)
+    gcd = num1;
+  else
+    gcd = num2;
+  while (num1 % gcd != 0 || num2 % gcd != 0) {
+    i--;
+  }
+  printf("Greatest common divisor: %d\n", gcd);
+
+  return 0;
+}
+```
+###### version 3
+```c
+// This is my version 3 program for programming project 2 
+// in C Programming: a modern approach Ch6
+
+#include <stdio.h>
+
+int main(void)
+{
+  int m, n, remainder;
+
+  printf("Enter two integers: ");
+  scanf("%d %d", &m, &n);
+
+  while (n != 0) {
+    remainder = m % n;
+    m = n;
+    n = remainder;
+  }
+
+  printf("Greatest common divisor: %d\n", m);
+
+  return 0;
+}
+```
+##### 三，output
+```
+Enter two integers: 1000000007 999999937
+Greatest common divisor: 1
+```
+##### 三，學習重點
+1. 與 version 1 相比，在處理像 1000000007 與 999999937 這兩個大數字的時候，用演算法的速度確實和暴力破解法差很多
+2. 雖然說用了歐基里得演算法，但我自己覺得在寫的時候很像自己只是照著 Hint 去寫，對於他的原理還不是很了解，但我覺得這還是一個好的嘗試，讓自己卻學習優化自己的 program
+
+##### 四，補充資料
+- [輾轉相除法 (維基百科)](https://zh.wikipedia.org/zh-tw/%E8%BC%BE%E8%BD%89%E7%9B%B8%E9%99%A4%E6%B3%95)
+- [歐基里得演算法 (Jason Chen's Blog)](https://jason-chen-1992.weebly.com/home/-euclidean-algorithm)
+<br>
+
+### Proj.4: 修改 broker.c
+
+##### 一，program
+```c
+// Calculates a broker's commision version 2
+// This is my program for programming project 4 in 
+// C Programming: a modern approach
+
+#include <stdio.h>
+#define percent 0.01f
+
+int main(void)
+{
+    float commission, value;
+
+    printf("0=exit\n");
+
+    for (;;) {
+      printf("Enter value of trade: ");
+      scanf("%f", &value);
+      if (value == 0.00f)
+        break;
+      else if (value < 2500.00f)
+        commission = 30.00f + 1.7f * percent * value;
+      else if (value < 6250.00f)
+        commission = 56.00f + 0.66f * percent * value;
+      else if (value < 20000.00f)
+        commission = 76.00f + 0.34f * percent * value;
+      else if (value < 50000.00f)
+        commission = 100.00f + 0.22f * percent * value;
+      else if (value < 500000.00f)
+        commission = 155.00f + 0.11f * percent * value;
+      else
+        commission = 255.00f + 0.22f * percent * value;
+      printf("Commission: $%.2f\n", commission);
+      printf("\n");
+      }
+
+    return 0;
+}
+```
+##### 二，output
+```
+0=exit
+Enter value of trade: 350000
+Commission: $540.00
+
+Enter value of trade: 2468416
+Commission: $5685.52
+
+Enter value of trade: 8746
+Commission: $105.74
+
+Enter value of trade: 32135
+Commission: $170.70
+
+Enter value of trade: 13484
+Commission: $121.85
+
+Enter value of trade: 0
+```
+##### 三，學習重點
+1. for statement 的位置要放對。我一開始的時候將 for 放在 `printf("Enter value of trade: ");` 與 `scanf("%f", &value);` 之後，導致輸入完第一次的 value 後 program 就瘋狂跳出 if statement 的結果，不讓我輸入新值
+<br>
+
+### Proj.6: 顯示出 1 到 n 中偶數的平方
+
+##### 一，program
+```c
+// This is my program for programming project 6 in C Programming: a modern approach
+// This is used to prompts the user to enter a number n,
+// then prints all even squares between 1 and n
+
+#include <stdio.h>
+
+int main(void)
+{
+    int n, i;
+
+    printf("Enter a number n: ");
+    scanf("%d", &n);
+
+    for (i = 2; i * i <= n; i += 2)
+      printf("%d\n", i * i);
+
+    return 0;
+}
+```
+##### 二，output
+```
+Enter a number n: 245
+4
+16
+36
+64
+100
+144
+196
+```
+<br>
+
+### Proj.8: 顯示出日曆
+##### 一，program
+
+###### 版本介紹
+
+1. version 1: 這是我自己一開始寫的 program
+2. version 2: 我後來問了 AI 後它覺得用 `num_day--` 會導致程式像是空轉了一圈，邏輯上會有點不順。所以我將其改成了在顯示出日期後再判斷要不要換行
+###### version 1
+```c
+// This is my program for programming project 8 in 
+// C Program: a modern approach
+// It is used to prints a one-month calendar
+
+#include <stdio.h>
+
+int main(void)
+{
+    int num_day, month_day, day_of_week;
+
+    printf("Enter number of days in month: ");
+    scanf("%d", &month_day);
+    printf("Enter starting day of the week (1=Sun, 7=Sat): ");
+    scanf("%d", &day_of_week);
+
+    for (int i = 1; i != day_of_week; i++)
+      printf("   ");
+    for (num_day = 1; num_day <= month_day; num_day++, day_of_week++) {
+      if (day_of_week != 8)
+        printf("%2d ", num_day);
+      else {
+        printf("\n");
+        day_of_week = 0;
+        num_day--;
+      }
+    }
+    printf("\n");
+
+    return 0;
+}
+```
+###### version 2
+```c
+// This is my program for programming project 8 in 
+// C Program: a modern approach
+// It is used to prints a one-month calendar
+
+#include <stdio.h>
+
+int main(void)
+{
+    int num_day, month_day, day_of_week;
+
+    printf("Enter number of days in month: ");
+    scanf("%d", &month_day);
+    printf("Enter starting day of the week (1=Sun, 7=Sat): ");
+    scanf("%d", &day_of_week);
+
+    for (int i = 1; i != day_of_week; i++)
+      printf("   ");
+    for (num_day = 1; num_day <= month_day; num_day++, day_of_week++) {
+      printf("%2d ", num_day);
+      if (day_of_week == 7) {
+        printf("\n");
+        day_of_week = 0;
+      }
+    }
+    printf("\n");
+
+    return 0;
+}
+```
+##### 二，output 
+```
+Enter number of days in month: 31
+Enter starting day of the week (1=Sun, 7=Sat): 4
+          1  2  3  4 
+ 5  6  7  8  9 10 11 
+12 13 14 15 16 17 18 
+19 20 21 22 23 24 25 
+26 27 28 29 30 31 
+```
+
+##### 三，學到的東西
+
+1. 這個 program 在寫的時候卡了一段時間，最後的時候我決定先寫出列出空格後的  for statement，因為這是我覺得我自己會寫的地方
+2. 寫完空格後的 for statement 後，在列空格的地方我選擇了一樣用 for statement，並且加入了 i 作為計數的 variable，藉由這樣來控制要執行幾次的 loop
