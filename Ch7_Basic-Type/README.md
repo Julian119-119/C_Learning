@@ -6,8 +6,11 @@
 | 題號  | 功能         | 觀念                     | 連結               |
 | --- | ---------- | ---------------------- | ---------------- |
 | 範例一 | 計算一連串數字的總和 | 用 long int 防止 overflow | [view](./sum2.c) |
+<br><br>
 
-### I. Integer Types
+---
+# Note
+## I. Integer Types
 #### 一，Integer Constants
 
 - Octal and Hexadecimal numbers:
