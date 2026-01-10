@@ -26,7 +26,7 @@
 | **05**  | Selection Statements                    |   ✅    |    [view](./Ch5_selection-statement)     |
 | **06**  | Loops                                   |   ✅    |            [view](./Ch6_loop)            |
 | **07**  | Basic Types                             |   ✅    |         [view](./Ch7_Basic-Type)         |
-| **08**  | Arrays                                  |   ⬜    |                                          |
+| **08**  | Arrays                                  |   🔄   |           [view](./Ch8_arrays)           |
 | **09**  | Functions                               |   ⬜    |                                          |
 | **10**  | Program Organization                    |   ⬜    |                                          |
 | **11**  | Pointers                                |   ⬜    |                                          |
