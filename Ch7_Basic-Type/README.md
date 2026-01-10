@@ -3,9 +3,20 @@
 ## Program overview
 
 
-| 題號  | 功能         | 觀念                     | 連結               |
-| --- | ---------- | ---------------------- | ---------------- |
-| 範例一 | 計算一連串數字的總和 | 用 long int 防止 overflow | [view](./sum2.c) |
+| 題號             | 功能            | 觀念                          | 連結                                       |
+| -------------- | ------------- | --------------------------- | ---------------------------------------- |
+| 範例一            | 計算一連串數字的總和    | 用 long int 防止 overflow      | [view](./sum2.c)                         |
+| 範例二            | 計算文字的長度       | 學習 getchar()                | [view](./length.c)                       |
+| 範例二 version2   | 同上            | 將上面的 program 縮短             | [view](./length2.c)                      |
+| Project 13     | 計算一句話的平均字數    | 用 getcahr() 來判斷字            | [view](./programming-project_ch7_13.c)   |
+| Project 14     | 用牛頓法找出平方根的估計值 | 學習用 double 的 floating-point | [view](./programming-project_ch7_14.c)   |
+| Project 15 (a) | 計算階乘          | 利用階乘來看 short 哪時候會溢出         | [view](./programming-project_ch7_15_a.c) |
+| Project 15 (b) | 同上            | 利用階乘來看 int 哪時候會溢出           | [view](./programming-project_ch7_15_b.c) |
+| Project 15 (c) | 同上            | 利用階乘來看 long 哪時候會溢出          | [view](./programming-project_ch7_15_c.c) |
+| Project 15 (d) | 同上            | 利用階乘來看 long long int 哪時候會溢出 | [view](./programming-project_ch7_15_d.c) |
+| Project 15 (e) | 同上            | 利用階乘來看 float 哪時候會溢出         | [view](./programming-project_ch7_15_e.c) |
+| Project 15 (f) | 同上            | 利用階乘來看 double 哪時候會溢出        | [view](./programming-project_ch7_15_f.c) |
+| Project 15 (g) | 同上            | 利用階乘來看 long double 哪時候會溢出   | [view](./programming-project_ch7_15_g.c) |
 <br><br>
 
 ---
@@ -664,3 +675,285 @@ Reason:
 	3. 1440: `short`
 	4. 86400: `long`
 <br>
+#### Ex.7: 找尋  octal escape
+- 我的答案：
+	1. \10
+	2. \12
+	3. \15
+	4. \11
+- Reason: 查表
+<br>
+
+#### Ex.8: 找尋 hexadecimal escape
+- 我的答案：
+	1. \x08
+	2. \x0a
+	3. \x0d
+	4. \x09
+- Reason: 查表
+<br>
+
+#### Ex.9: integer promotion and integer division
+- 我的答案：
+	- `int`
+- Reason: 
+	- `char` 的 integer conversion rank 較 `int` 低，所以會被換成 `int`
+<br>
+
+#### Ex.10: integer promotion and precedence
+- 我的答案：
+	- `unsigned int`
+- Reason: 
+	- precedence: casting 在 precedence 內是與 unary operator 同級，且 precedence 的順序為 unary > multiplication > addition
+	- `(int) j` 會先將 `j` 換成 `int` ，然後在一個是 `int` ，另一個為 `unsigned int` 的狀況下會將兩者皆換成 `unsigned int`
+<br>
+
+#### Ex.11: usual arithmetic conversion
+- 我的答案：
+	- double
+- Reason:
+	- associative: \/ 與 \* 為 left associativity
+	- conversion: `int` \* `float` 會變成 `float` ，接著 `float` \/ `double` 會變成 `double`
+<br>
+
+#### Ex.12: conversion during assignment and arithmetic
+- 我的答案：
+	- 兩次的 implicit conversion
+- Reason: 
+	- precedence 從高到低為 addition, assignment，所以 `int` 會先加上 `float` 變成 `float` ，接著在 assignment 的 conversion 會變成與 Lvalue 的型別相同，所以變成了 `double`
+<br>
+
+#### Ex.13: 綜和判斷 implicit conversion 的結果
+- 我的答案:
+	1. (a): `int`
+	2. (b): `long`
+	3. (c): `double`
+	4. (d): `float`
+	5. (e): `double`
+	6. (f): `int`
+- Reason: 
+	- 在宣告的時候 `char c = '\1';`  是符號 1 而不是 49，因為有 escape sequence
+	1. (a): `char` + `int` 會變成 `int`
+	2. (b): `short` + `long` 會變成 `long`
+	3. (c): `float` - `dluble` 會變成 `double`
+	4. (d): `float` \/ `char` 會變成 `float`
+	5. (e): `float` - `double` 會變成 `double`
+	6. (f): casting 會直接變成指定的型別
+<br>
+
+#### Ex.14: 判斷算式是否會出錯
+- 我的答案：可能會出錯
+- Reason: `float` 用的位元數較 `int` 高，所以可能導致溢出
+<br>
+
+#### Ex.15: 用 `typedef` 來手動定義型別
+- 我的答案：
+	```c
+	typedef char int8    // 通常 char 為 8-bit
+	typedef short int16  // 通常 short 為 16-bit
+	typedef int int32    // 通常 int 為 32-bit
+	```
+<br><br>
+
+---
+# Programming Projects
+
+#### Proj.13
+- program:
+	```c
+	// This is my program for programming project 13 
+	// in C Programming: a modern approach
+	// This program is used to calculate the average word length 
+	// for a sentence
+	
+	#include <stdio.h>
+	
+	int main(void)
+	{
+	    char ch;
+	    int i = 0, len = 0;
+	    float ave_len;
+	
+	    printf("Enter a sentence: ");
+	    for (;;) {
+	      ch = getchar();
+	      if (ch == '\n') {
+	        i++;
+	        break;
+	      }
+	      else if (ch == ' ')
+	        i++;
+	      else
+	        len++;
+	    }
+	    ave_len = (float) len / i;
+	
+	    printf("Average word length: %.2f\n", ave_len);
+	
+	    return 0;
+	}
+	```
+- output:
+	```
+	Enter a sentence: Write a program that calculates the average word length for a sentence:
+	Average word length: 5.00
+	```
+- 一開始犯的錯：
+	1. 在 if 內要判斷是否相等的時候用一個等號，要用兩個等號**來判斷**
+	2. 在 `ave_len = (float) len / i;` 這行，我一開始是寫說 `ave_len = len / i;` 這樣會導致在除法時 int 會將小數的部份切除，就算後面再換回 `float` 也一樣救不回來
+
+## Proj.14
+- program:
+	```c
+	//   This is my program for programming project 14 
+	// in c programming: a modern approach
+	//   This program is used to find a square root 
+	// for a positive number by Neqton's method
+	
+	#include <stdio.h>
+	#include <math.h>
+	
+	int main(void)
+	{
+	    double old_y, y = 1.00;
+	    int x;
+	
+	    printf("Enter a positive number: ");
+	    scanf("%d", &x);
+	
+	    do {
+	      old_y = y;
+	      y = (x/y + old_y) / 2;
+	    } while (fabs(y - old_y) > .00001);
+	
+	    printf("Square root: %lf\n", y);
+	
+	    return 0;
+	}
+	```
+- output:
+	```
+	Enter a positive number: 7
+	Square root: 2.645751
+	```
+- 反思：
+	- 我覺得這一題的困難點反而是我有點看不懂題目的計算方法，與 Ch6 中找尋最大公因數的 program 一樣，只要換一個算法，就必須要先看懂這個算法才能夠去寫 prgram
+	- 但是反而看懂後就覺得這題其實也沒到特別難，只是在 `fab` 的運用上，因為是之前沒用過得運算符號，還要去查一下才知道他是絕對值得意思
+- 學習重點
+	- 在理解題目的時候，可以用第一步，第二步這樣的想法去看，因為在寫 program 的時候也是這樣
+	- `fab()` 是用於算絕對值的
+<br>
+
+## Proj.15
+
+###### (a)
+- program:
+	```c programming-project_ch7_15.c
+	// This is my program for programming project 15 (a) 
+	// in C programming: a modern approach
+	// This program is used to compute 
+	// the factorial of a positivie integer
+	
+	#include <stdio.h>
+	
+	int main(void)
+	{
+	    int n;
+	    short factorial = 1;
+	
+	    printf("Enter a positive integer: ");
+	    scanf("%d", &n);
+	
+	    if (n < 0)
+	      printf("Factorial is not defined for negative numbers.\n");
+	    else {
+	      for(int i = 1; i <= n; i++) {
+	        factorial *= i;
+	        }
+	      printf("Factorial of %d: %hd\n",n, factorial);
+	    }
+	
+	    return 0;
+	}
+	```
+- output:
+	```
+	Enter a positive integer: 7
+	Factorial of 7: 5040
+	
+	Enter a positive integer: 8
+	Factorial of 8: -25216
+	```
+- 因為 short 通常都是 16-bit，所以當 8 的時候會超過 3萬2，此時就會溢出
+
+###### (b)
+- 因為只是更改儲存變數的型別，所以就不附 program 了
+- output:
+	```
+	Enter a positive integer: 12
+	Factorial of 12: 479001600
+	
+	Enter a positive integer: 13
+	Factorial of 13: 1932053504
+	```
+- 因為 `int` 通常用的是 32-bit 且 $2^{32} -1 \approx 40 億$所以在 13 的時候就溢出了（真實的數字為 627020800）
+
+###### (c)
+- 因為只是更改儲存變數的型別，所以就不附 program 了
+- output:
+	```
+	Enter a positive integer: 20
+	Factorial of 20: 2432902008176640000
+	
+	Enter a positive integer: 21
+	Factorial of 21: -4249290049419214848
+	```
+- 在 21 的時候溢出，理由與上面相同
+
+###### (d)
+- 因為只是更改儲存變數的型別，所以就不附 program 了
+- output:
+	```
+	Enter a positive integer: 20
+	Factorial of 20: 2432902008176640000
+	
+	Enter a positive integer: 21
+	Factorial of 21: -4249290049419214848
+	```
+- 在 21 的時候就溢出了，因為在 64-bit 的標準下，`long long` 與 `long` 一樣都會是 64-bit
+
+###### (e)
+- 因為只是更改儲存變數的型別，所以就不附 program 了
+- output:
+	```
+	Enter a positive integer: 13
+	Factorial of 13: 6227020800.000000
+	
+	Enter a positive integer: 14
+	Factorial of 14: 87178289152.000000
+	// 精準值為 87178291200
+	
+	Enter a positive integer: 34
+	Factorial of 34: 295232822996533287161359432338880069632.000000
+	
+	Enter a positive integer: 35
+	Factorial of 35: inf
+	```
+- 雖然到了 35 才顯示出 inf ，但在 14 之後，後面的數字就開始不精準了。因為 `float` 是用科學記號去紀錄，這雖然使它可以紀錄巨大的數字，但後面的數字則會因位數不夠而不精準
+
+###### (f)
+- 因為只是更改儲存變數的型別，所以就不附 program 了
+- output:
+	```
+	Enter a positive integer: 170
+	Factorial of 170: 7257415615307994045399635715589591467896184117242257803405544211755693246215271577444614997868077640013184176271985826801597743247247979077995336619429980685793285768053360886112149825437081356365699043287884614002788490694530469661753007801896962563721104619242357348735986883814984039817295623520648167424.000000
+	
+	Enter a positive integer: 171
+	Factorial of 171: inf
+	```
+- 在 171 開始溢出
+
+###### (g)
+- 因為只是更改儲存變數的型別，所以就不附 program 了
+- output: 因為數字實在太大了，所以就不紀錄了
+- 在 1755 的時候開始溢出

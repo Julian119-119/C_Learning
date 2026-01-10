@@ -20,12 +20,12 @@
 
 | Chapter | Topic                                   | Status |               Notes & Code               |
 | :-----: | :-------------------------------------- | :----: | :--------------------------------------: |
-| **02**  | Fundamentals                            |   ✅    |        [View](./Ch2_fundamentals)       |
-| **03**  | Formatted Input/Output                  |   ✅    | [View](./Ch3_formatted-input-and-output)|
-| **04**  | Expressions                             |   ✅    |         [view](./Ch4_expression)        |
-| **05**  | Selection Statements                    |   ✅    |    [view](./Ch5_selection-statement)    |
-| **06**  | Loops                                   |   ✅   |            [view](./Ch6_loop)            |
-| **07**  | Basic Types                             |   ⬜    |                                          |
+| **02**  | Fundamentals                            |   ✅    |        [View](./Ch2_fundamentals)        |
+| **03**  | Formatted Input/Output                  |   ✅    | [View](./Ch3_formatted-input-and-output) |
+| **04**  | Expressions                             |   ✅    |         [view](./Ch4_expression)         |
+| **05**  | Selection Statements                    |   ✅    |    [view](./Ch5_selection-statement)     |
+| **06**  | Loops                                   |   ✅    |            [view](./Ch6_loop)            |
+| **07**  | Basic Types                             |   ✅    |         [view](./Ch7_Basic-Type)         |
 | **08**  | Arrays                                  |   ⬜    |                                          |
 | **09**  | Functions                               |   ⬜    |                                          |
 | **10**  | Program Organization                    |   ⬜    |                                          |
