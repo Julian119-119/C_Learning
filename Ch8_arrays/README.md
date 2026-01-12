@@ -2,17 +2,19 @@
 
 ## Program overview
 
-| 題號     | 功能                          | 觀念                                      | 連結                    |
-| ------ | --------------------------- | --------------------------------------- | --------------------- |
-| 範例一    | 將數字的前後順序顛倒並印出來              | 學習 for statement 與一維陣列的搭配               | [view](./reverse.c)   |
-| 範例二    | 判斷是否有重複的數字                  | 學習一維陣列與 boolean value 的搭配。這是我寫的 program | [view](./repdigit.c)  |
-| 範例二 v2 | 同上                          | 同上，且這是課本的 program                       | [view](./repdigit2.c) |
-| 範例三    | 計算 n 年之後的金額與增加 1 到 4% 利息的狀況 | 利用兩個 for statement 操控兩個變數並且搭配一維陣列       | [view](./interest.c)  |
-| 範例四    | 輸入牌數後抽牌                     | 將二維陣列作為檢查表，並且將一維陣列當作對照表                 | [view](./deal.c)      |
+| 題號      | 功能                          | 觀念                                      | 連結                                     |
+| ------- | --------------------------- | --------------------------------------- | -------------------------------------- |
+| 範例一     | 將數字的前後順序顛倒並印出來              | 學習 for statement 與一維陣列的搭配               | [view](./reverse.c)                    |
+| 範例二     | 判斷是否有重複的數字                  | 學習一維陣列與 boolean value 的搭配。這是我寫的 program | [view](./repdigit.c)                   |
+| 範例二 v2  | 同上                          | 同上，且這是課本的 program                       | [view](./repdigit2.c)                  |
+| 範例三     | 計算 n 年之後的金額與增加 1 到 4% 利息的狀況 | 利用兩個 for statement 操控兩個變數並且搭配一維陣列       | [view](./interest.c)                   |
+| 範例四     | 輸入牌數後抽牌                     | 將二維陣列作為檢查表，並且將一維陣列當作對照表                 | [view](./deal.c)                       |
+| Proj.17 | 印出 n * n 的 magic square     | 綜和運用這章所學的知識                             | [view](./programming-project_Ch8_17.c) |
 
 
 ---
-## I. One-Dimensional Arrays
+## Note
+### I. One-Dimensional Arrays
 
 #### 一，Intro
 
@@ -357,7 +359,7 @@
 		這幾行來做測試，以確保排版與輸出正確
 <br>
 
-## II. Multidimensional Arrays
+### II. Multidimensional Arrays
 
 #### 一，Intro
 
@@ -530,7 +532,7 @@
 	2. 結合 boolean value 來作為檢查表
 <br>
 
-## III. Variable-Length Arrays
+### III. Variable-Length Arrays
 
 - variable-length array (簡稱 VLA)：宣告陣列的時候不給它一個實際的元素個數，而是用一個變數取代，讓它可以依照所需的元素數量來建造陣列<br>E.g:
 	```c
@@ -545,7 +547,7 @@
 	```
 <br><br>
 
-# Exercises
+## Exercises
 
 #### Ex.1: 用 sizeof(a) / sizeof(t) 為何較差
 
@@ -670,3 +672,154 @@ for (int i = 0; i < NUM_ROW; i++)    // row i
       checker_board[i][j] = 'B';
 ```
 <br><br>
+
+## Programming Projects
+
+#### Proj.17: 印出 n * n 的 magic square
+
+- 最終的program:
+```c
+// This is my program for programming project 17 
+// in C Programming: a modern approach
+// This program is used to create a magic sauare
+
+#include <stdio.h>
+
+int main(void)
+{
+    int n;
+
+    printf("This program creates a magic square of a specified size\n");
+    printf("The size must be an odd number between 1 and 99\n");
+    for (;;) {
+      printf("Enter size of magic square: ");
+      scanf("%d", &n);
+      if (!(n % 2)) {
+        printf("\nPlease enter an odd number\n");
+        continue;
+      }
+      else if (n < 1 || n > 99) {
+        printf("\nPlease enter a number between 1 and 99\n");
+        continue;
+      }
+      else
+        break;
+    }
+
+    int magic_square[n][n];
+    int row = 0, col = n / 2;
+
+    for (int x = 0; x < n; x++)
+      for (int y = 0; y < n; y++)
+        magic_square[x][y] = 0;
+    // 將 magic_square 刷 0
+
+    magic_square[row][col] = 1;                 
+    // 將 1 放置在 row 0 的中間
+    for (int num = 2; num <= n * n; num++) {    
+    // num 為 magic square 內的數字
+      int next_row = row - 1;
+      int next_col = col + 1;
+      if (next_row < 0)
+        next_row += n;
+      if (next_col >= n)
+        next_col -= n;
+      if (magic_square[next_row][next_col]) {
+        next_row = row + 1;
+        next_col = col;
+      }
+      row = next_row;
+      col = next_col;
+      magic_square[row][col] = num;
+    }
+
+    for(int x = 0; x < n; x++) {
+      printf("\n");
+      for (int y = 0; y < n; y++)
+        printf("%4d", magic_square[x][y]);
+    }
+    printf("\n");
+
+    return 0;
+}
+```
+
+- output:
+	```
+	This program creates a magic square of a specified size
+	The size must be an odd number between 1 and 99
+	Enter size of magic square: 4
+	
+	Please enter an odd number
+	Enter size of magic square: 111
+	
+	Please enter a number between 1 and 99
+	Enter size of magic square: 9
+	
+	  47  58  69  80   1  12  23  34  45
+	  57  68  79   9  11  22  33  44  46
+	  67  78   8  10  21  32  43  54  56
+	  77   7  18  20  31  42  53  55  66
+	   6  17  19  30  41  52  63  65  76
+	  16  27  29  40  51  62  64  75   5
+	  26  28  39  50  61  72  74   4  15
+	  36  38  49  60  71  73   3  14  25
+	  37  48  59  70  81   2  13  24  35
+	```
+- 重點
+	1. 
+		```c
+		for (int x = 0; x < n; x++)
+		  for (int y = 0; y < n; y++)
+		    magic_square[x][y] = 0;
+		```
+		LVA 不能夠用初始化，要刷 0 的話只能用 for statement。
+	2. 
+		```c
+		    magic_square[row][col] = 1;                 
+		    // 將 1 放置在 row 0 的中間
+		    for (int num = 2; num <= n * n; num++) {    
+		    // num 為 magic square 內的數字
+		      int next_row = row - 1;
+		      int next_col = col + 1;
+		      if (next_row < 0)
+		        next_row += n;
+		      if (next_col >= n)
+		        next_col -= n;
+		      if (magic_square[next_row][next_col]) {
+		        next_row = row + 1;
+		        next_col = col;
+		      }
+		      row = next_row;
+		      col = next_col;
+		      magic_square[row][col] = num;
+		    }
+		```
+	在這個填數字的迴圈當中，我一開始是直接更新現在的 row 與 col 成下一個，但這樣的話在 每個角落的數字就會出錯，所以如果偵測下一步的話，就盡量宣告新的變數
+	- 原算法與 output:
+		```c
+		    magic_square[row][col] = 1;                 
+		    // 將 1 放置在 row 0 的中間
+	    for (int num = 2; num <= n * n; num++) {    
+	    // num 為 magic square 內的數字
+	      if (row < 0 )
+	        row += n;
+	      if (col >= n)
+	        col -= n;
+	      if (magic_square[row][col]) {
+	        row -= 2;
+	        col--;
+	      }
+	      magic_square[row][col] = num;
+	      row--;
+	      col++;
+	    }
+		```
+	- output:
+		```
+		  19   8   1  16   5
+		  12   0  15   4  23
+		  25  14   3  22  11
+		  18   7  21  10   0
+		   6  20   9   0  17
+		```

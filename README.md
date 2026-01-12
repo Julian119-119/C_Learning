@@ -26,7 +26,7 @@
 | **05**  | Selection Statements                    |   ✅    |    [view](./Ch5_selection-statement)     |
 | **06**  | Loops                                   |   ✅    |            [view](./Ch6_loop)            |
 | **07**  | Basic Types                             |   ✅    |         [view](./Ch7_Basic-Type)         |
-| **08**  | Arrays                                  |   🔄   |           [view](./Ch8_arrays)           |
+| **08**  | Arrays                                  |   ✅    |           [view](./Ch8_arrays)           |
 | **09**  | Functions                               |   ⬜    |                                          |
 | **10**  | Program Organization                    |   ⬜    |                                          |
 | **11**  | Pointers                                |   ⬜    |                                          |
@@ -50,8 +50,8 @@
 目前的學習重心還是在熟練 C 語言的語法。然而我希望透過這份專案，不僅學會 C 的語法，更能理解電腦底層的運作邏輯，使自己目前對於這台裝有 MX Linux 的筆電有更好的掌握程度，也為未來的課程打好基礎。
 
 ### 2. 遇到的挑戰
-- **環境建置：** 剛開始在適應 Linux 指令與 Git 版本控制的流程
-- **語法適應：** 正在習慣寫越來越長的 program，與記住各個 statement 的語法
+- **語法適應：** 語法上的打法大致上都熟悉了
+- **邏輯：** 開始學習寫出邏輯上更複雜的程式 
 
 ---
 *Created by Julian, Statistics Major in NCCU.*
