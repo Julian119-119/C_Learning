@@ -27,7 +27,7 @@
 | **06**  | Loops                                   |   ✅    |            [view](./Ch6_loop)            |
 | **07**  | Basic Types                             |   ✅    |         [view](./Ch7_Basic-Type)         |
 | **08**  | Arrays                                  |   ✅    |           [view](./Ch8_arrays)           |
-| **09**  | Functions                               |   ⬜    |                                          |
+| **09**  | Functions                               |   🔄   |          [view](./Ch9_function)          |
 | **10**  | Program Organization                    |   ⬜    |                                          |
 | **11**  | Pointers                                |   ⬜    |                                          |
 | **12**  | Pointers and Arrays                     |   ⬜    |                                          |
