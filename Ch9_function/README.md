@@ -519,8 +519,8 @@ int sum_array(int n, int a[])
 		```c
 		return n >= 0 ? n : 0;
 		```
-		\*p.s：如果忘記這個 expression 的話可以看 [[C-program_1_Ch5_note#七，Conditional Expressions|ch5:  conditional expressions]]
-- 如果回傳的值與要求的值不同，就會做 [[C-program_1_Ch9_note#二，Argument Conversions|implicit conversion]] ，回傳函數要求的型別
+		\*p.s：如果忘記這個 expression 的話可以看 ch5: conditional expressions
+- 如果回傳的值與要求的值不同，就會做 implicit conversion ，回傳函數要求的型別
 - 如果 function 要求要回傳值，但到底了卻發現沒有 `return`，就會是 undefined behavior
 - `return` 也可以出現在不需要回傳值的 function<br>form:
 	```c
@@ -589,7 +589,7 @@ int sum_array(int n, int a[])
 		    return x * power(x, n - 1);
 		}
 		```
-		也可以用 [[C-program_1_Ch5_note#七，Conditional Expressions|conditional expression]] 來簡化方程式
+		也可以用 conditional expression 來簡化方程式
 		```c
 		int power(int x, int n)
 		{
@@ -607,7 +607,7 @@ int sum_array(int n, int a[])
 	2. 將元素 1,...,i - 1 用 quicksort 重排
 	3. 將元素 i + 1,...,n 用 quicksort 重排
 - 在 C 內，一次的 Quicksort 的實際作法
-	- *\*這邊建議可以去看[[C_Programming-A_Modern_Approach_ocr_Ch9.pdf#page=24|課本的圖例]]，我認為講的很好
+	- *\*這邊建議可以去看課本的圖例，我認為畫的很好
 	- *\* 接下來會使用 `low` 與 `high` 這兩個 mark ，因為只是 mark ，所以不代表真的大小關係，他們是代表比基準點還 "小" 或 "大" 是為真還是為假*
 	1. 先將最左邊的數字設定為 `low`，右邊的設定為 `high`
 	2. 將 `low` 的數字先放在一旁（也就是先複製給其他的變數），做為基準點並且製造出一個洞
