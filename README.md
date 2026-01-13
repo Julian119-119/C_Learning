@@ -3,7 +3,7 @@
 <br><br>
 
 ## 關於這個專案
-這個 Repository 紀錄了我閱讀 **《C Programming: A Modern Approach》** 的學習歷程。<br>時間則是由2025年12月28日開始定期整理，因為之前讀到第五章時才開始想說要整理筆記與自己的學習紀錄，所以才會從寒假已經開始的一週後才開始紀錄。<br>裡面包含了各章節的筆記 (即各章節資料夾內的 README)，以及各章節的 exercise 的 programming project。因為在第五章以前的 exercise 的答案在當初就沒有被記錄下來，所以 exercise 的部份只有在 Ch5 (含) 之後才有。而 programming project 因為有許多題只是練打字而已，所以基本上我只有寫我認為不太會寫的與書中有特別標注的題目。
+這個 Repository 紀錄了我閱讀 **《C Programming: A Modern Approach》** 的學習歷程。<br>時間則是由2025年12月28日開始定期整理，因為之前讀到第五章時才開始想說要整理筆記與自己的學習紀錄，所以才會從寒假已經開始的一週後才開始紀錄。<br>裡面包含了各章節的筆記 (即各章節資料夾內的 README)，以及各章節的 exercise 的 programming project。因為在第五章以前的 exercise 的答案在當初就沒有被記錄下來，所以 exercise 的部份只有在 Ch5 (含) 之後才有。而 programming project 因為時間有限，所以我會先寫各章節最難的題目來評斷自身的能力，認為可以就跳下一張，不行就再練習多一點的題目<br>\**補：因為筆記上必然是越後面的越知道要以什麼形式呈現，所以如果時間不足可挑後面的章節的筆記來看*
 <br><br>
 
 ---

@@ -1,6 +1,19 @@
-# # C program: a modern approach Ch.9 note
+# C program: a modern approach Ch.9 note
 
-## I. Defining and Calling Functions
+## Program overview
+
+
+| 題號  | 功能         | 觀念                     | 連結                    |
+| --- | ---------- | ---------------------- | --------------------- |
+| 範例一 | 計算數字的平均    | 學習定義與呼叫有回傳值的 function  | [view](./average.c)   |
+| 範例二 | 將數字遞減並列印出來 | 學習定義與呼叫沒有回傳值的 function | [view](./countdown.c) |
+| 範例三 | 列印出一句話     | 學習定義與呼叫沒有參數的 function  | [view](./pun2.c)      |
+| 範例四 | 測試數字是否為質數  | 將方程式結合布林值，綜和以上所學       | [view](./prime.c)     |
+<br><Br>
+
+---
+## Note
+### I. Defining and Calling Functions
 #### 一，Function definitions
 
 - form:
@@ -240,7 +253,7 @@ Average of 3.5 and 10.2: 6.85
 <br><br>
 
 ---
-## II. Function Declarations
+### II. Function Declarations
 
 - 作用：就算 program 是先呼叫再定義 function，也能夠保證可以用此 function
 - 可以將他想成：先告訴編譯器接下來會有什麼 function ，要儲存成什麼類型。所以這一行也被稱為 function 的 prototype (原型)
@@ -281,7 +294,7 @@ Average of 3.5 and 10.2: 6.85
 	```
 <br><br>
 
-## III. Arguments
+### III. Arguments
 
 #### 一，Intro
 - argument 是在呼叫 function 的時候用的數字，而 parameter 則是在定義 function 的時候用的
