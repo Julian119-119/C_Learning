@@ -3,12 +3,13 @@
 ## Program overview
 
 
-| 題號  | 功能         | 觀念                     | 連結                    |
-| --- | ---------- | ---------------------- | --------------------- |
-| 範例一 | 計算數字的平均    | 學習定義與呼叫有回傳值的 function  | [view](./average.c)   |
-| 範例二 | 將數字遞減並列印出來 | 學習定義與呼叫沒有回傳值的 function | [view](./countdown.c) |
-| 範例三 | 列印出一句話     | 學習定義與呼叫沒有參數的 function  | [view](./pun2.c)      |
-| 範例四 | 測試數字是否為質數  | 將方程式結合布林值，綜和以上所學       | [view](./prime.c)     |
+| 題號  | 功能         | 觀念                                        | 連結                    |
+| --- | ---------- | ----------------------------------------- | --------------------- |
+| 範例一 | 計算數字的平均    | 學習定義與呼叫有回傳值的 function                     | [view](./average.c)   |
+| 範例二 | 將數字遞減並列印出來 | 學習定義與呼叫沒有回傳值的 function                    | [view](./countdown.c) |
+| 範例三 | 列印出一句話     | 學習定義與呼叫沒有參數的 function                     | [view](./pun2.c)      |
+| 範例四 | 測試數字是否為質數  | 將方程式結合布林值，綜和以上所學                          | [view](./prime.c)     |
+| 範例五 | 排序 10 個數字  | 學習 quicksort 的演算法，並且運用遞迴的 function 將其寫成程式 | [view](./qsort.c)     |
 <br><Br>
 
 ---
@@ -506,3 +507,422 @@ int sum_array(int n, int a[])
 <br><Br>
 
 ---
+## IV. The `return` Statement
+
+- 作用：回傳值
+- form:
+	```c
+	return expression;
+	```
+	- 通常 expression 都是單一常數或變數
+	- 但也可以用更複雜的 expression<br>E.g:
+		```c
+		return n >= 0 ? n : 0;
+		```
+		\*p.s：如果忘記這個 expression 的話可以看 [[C-program_1_Ch5_note#七，Conditional Expressions|ch5:  conditional expressions]]
+- 如果回傳的值與要求的值不同，就會做 [[C-program_1_Ch9_note#二，Argument Conversions|implicit conversion]] ，回傳函數要求的型別
+- 如果 function 要求要回傳值，但到底了卻發現沒有 `return`，就會是 undefined behavior
+- `return` 也可以出現在不需要回傳值的 function<br>form:
+	```c
+	return;
+	// return in a void function
+	```
+	E.g:
+	```c
+	void print_int(int i)
+	{
+	  if (i < 0)
+	    return;
+	  printf("%d", i);
+	}
+	// 如果 i < 0，就會直接結束 function
+	```
+<br><br>
+
+## V. Program Termination
+
+#### 一，The `exit` Function
+
+- 用途：結束 `main` function (也可以用 `return`)
+- **屬於 <stdlib.h>** 這個 header 內
+- 引數的意義與 `return` 中的意義一樣，都是用來標注 `main` 的執行狀況 (結束就是 0，其他的就非 0)
+- E.g: (用於標示正常的結束，就回傳 0)
+	```c
+	exit(0);
+	// normal termination
+	```
+- 也可以用 **"EXIT_SUCCESS" 來標示正常的結束** (與 0 意義一樣)，**"EXIT_FAILURE" 來標示非正常的結束**<br>E.g:
+	```c
+	exit(EXIT_SUCCESS);
+	// normal termination
+	exit(EXIT_FAILURE);
+	// abnormal termination
+	```
+	- \*P.S: 這兩個是屬於 <stdlib.h> 的 macro，分別代表 0 和 1
+- 這 `exit` 與 `return` 在 `main` 之中基本上是等價的，所以 `exit` 當然可以用 expression
+	```c
+	exit(expression)
+	```
+<br>
+
+#### 二，Recursion
+
+- 遞迴的 function： 在 function 內呼叫自己<br>E.g: 
+	1. 計算 n!
+		```c
+		int fact(int n)
+		{
+		  if (n <= 1)
+		    return 1;
+		  else
+		    return n * fact(n-1);
+		}
+		// n! = n * (n - 1)! 
+		```
+	2. 計算 $x^n$ (利用 $x^n = x \times x^{n - 1}$)
+		```c
+		int power(int x, int n)
+		{
+		  if (n == 0)
+		    return 1;
+		  else
+		    return x * power(x, n - 1);
+		}
+		```
+		也可以用 [[C-program_1_Ch5_note#七，Conditional Expressions|conditional expression]] 來簡化方程式
+		```c
+		int power(int x, int n)
+		{
+		  return n == 0 ? 1 : x * power(x, n - 1);
+		}
+		```
+- 記住：一定要有一個中止條件，否則就會一直被執行下去（例如 計算階乘的 `n <= 1` 與計算 $x^n$ 的 `n == 0`）
+<br>
+
+#### 三，The Quicksort Algorithm
+
+- divide-and-conauer: 一種演算法的設計，將大塊的問題分割成小塊的部份來解決問題
+- 其中最受歡迎的就是 Quicksort，用於**由大到小或由小到大排序**，以下是其順序
+	1. 從元素陣列選擇元素 e 作為基準。將其重排為元素 1,...,i - 1 小於 e，元素 i = e，而元素 i + 1,...,n 皆大於或等於 e
+	2. 將元素 1,...,i - 1 用 quicksort 重排
+	3. 將元素 i + 1,...,n 用 quicksort 重排
+- 在 C 內，一次的 Quicksort 的實際作法
+	- *\*這邊建議可以去看[[C_Programming-A_Modern_Approach_ocr_Ch9.pdf#page=24|課本的圖例]]，我認為講的很好
+	- *\* 接下來會使用 `low` 與 `high` 這兩個 mark ，因為只是 mark ，所以不代表真的大小關係，他們是代表比基準點還 "小" 或 "大" 是為真還是為假*
+	1. 先將最左邊的數字設定為 `low`，右邊的設定為 `high`
+	2. 將 `low` 的數字先放在一旁（也就是先複製給其他的變數），做為基準點並且製造出一個洞
+	3. 接下來開始做以下的迴圈：
+		1. **將 `high` 從右往左移動 `high`**，去比對是否比基準點還來的大。為真，就向右移去偵測下一個數字。為假，則將該數字塞進在 `low` 的洞且這個位置就成為了新的洞，並且跳到第 4 步 (開始移動 `low`)
+		2. **將 `low` 從左往右移動**，去比對是否比基準點還來的小。先比對當前位置的數值，為真，就向右移去偵測下一個數字。為假，則將該數字塞進在 `high` 的洞且這個位置就成為了新的洞，並且跳到第 3 步 (開始移動 `high`)
+		3. 結束的條件：如果 `high` 與 `low` 剛好比對到了相同的位置就結束
+<br>
+
+#### 五，範例五：Quicksort
+
+- 功能：排序 10 個數字的順序
+- 這一次我一樣是先看懂一次這個 program，再嘗試自己寫一次，因為我個人認為這個演算法難，需要多花心力才能看懂它，無法直接就寫出來
+- 我在自己重寫這一個程式的時候，是將它拆成 split 的部份與 quicksort 的部份來分段測試以及完成
+
+###### 1. 課本上的 program + 我自己的註解
+
+```c
+// Sorts an array of integers using Quicksort algorithm
+
+#include <stdio.h>
+
+#define N 10
+
+void quicksort(int a[], int low, int high);
+int split(int a[], int low, int high);
+
+int main(void)
+{
+  int a[N], i;
+
+  printf("Enter 10 numbers to be sorted: ");
+  for(i = 0; i < N; i++)
+    scanf("%d", &a[i]);
+
+  quicksort(a, 0, N - 1);
+
+  printf("In sorted order: ");
+  for (i = 0; i < N; i++)
+    printf("%d ", a[i]);
+  printf("\n");
+}
+
+void quicksort(int a[], int low, int high)
+// 呼叫 quicksort 目的是排序
+// 不是依據這個 function 在做什麼來命名
+{
+  int middle;
+
+  if (low >= high) return;
+  // 這是這個遞迴函數的結束條件
+  // 因為在持續分堆的過程中會越來越小
+  // 連帶的，每段的 high 與 low 也會越來越逼近
+  // 最後小到 low 大於或等於 high 的時候就要停止
+  middle = split(a, low, high);
+  quicksort(a, low, middle - 1);
+  quicksort(a, middle + 1, high);
+}
+
+int split(int a[], int low, int high)
+// 呼叫 split 的目的是找出分割點
+// 不是依據這個 function 再做什麼來命名
+{
+  int part_element = a[low];
+  // part_element 為基準值
+
+  for (;;) {
+	// 因為每次都是先 low 再 high 再 low 到結束
+	// 所以就用無限迴圈的寫法
+	
+    // 洞在 low 上
+    while (low < high && part_element <= a[high])
+      high--;
+    if (low == high) break;
+    a[low++] = a [high];
+    // 因為是後綴的遞增，所以是先填完洞再移動 low 的位置
+
+    // 洞在 high 上
+    while (low < high && a[low] <= part_element)
+      low++;
+    if (low == high) break;
+    a[high--] = a[low];
+    // 因為是後綴的遞增，所以是先填完洞再移動到 high 的位置
+  }
+
+  a[low] = part_element;
+  return low;
+  // 這邊用 low 與 high 是一樣的
+  // 因為兩個在這邊都已經是等於了
+}
+```
+
+###### 2. 我的第一版程式（split 測試）
+
+- 第一次測試（錯誤）
+	```c
+	// sort an array of integers using Quicksort algorithm
+	
+	#include <stdio.h>
+	#define N 4
+	
+	void quicksort(int a[], int low, int high);
+	int split(int a[], int low, int high);
+	
+	int main(void)
+	{
+	  int a[N] = {3, 2, 1, 5};
+	  // 假數字，用於測試
+	
+	  split(a, 0, N - 1);
+	
+	  for (int i = 0; i < N; i++)
+	    printf("%d", a[i]);
+	  printf("\n");
+	}
+	
+	int split(int a[], int low, int high)
+	{
+	  int base_value;
+	
+	  base_value = a[low];
+	  for (;;) {
+	    // 移動 high
+	    while (low <= high && a[high] >= base_value)
+	      high--;
+	    if (low == high) break;
+	    a[low++] = a[high];
+	
+	    // 移動 low
+	    while (low <= high && a[low] <= base_value)
+	      low++;
+	    if (low == high) break;
+	    a[high--] = a[low];
+	  }
+	
+	    return 0;
+	}
+	```
+
+- 修正過後
+	```c
+	// sort an array of integers using Quicksort algorithm
+	
+	#include <stdio.h>
+	#define N 4
+	
+	void quicksort(int a[], int low, int high);
+	int split(int a[], int low, int high);
+	
+	int main(void)
+	{
+	  int a[N] = {3, 2, 1, 5};
+	  // 假數字，用於測試
+	
+	  split(a, 0, N - 1);
+	
+	  for (int i = 0; i < N; i++)
+	    printf("%d", a[i]);
+	  printf("\n");
+	}
+	
+	int split(int a[], int low, int high)
+	{
+	  int base_value;
+	
+	  base_value = a[low];
+	  for (;;) {
+	    // 移動 high
+	    while (low < high && a[high] >= base_value)
+	    // 修正點1：如果等於的話應該就要執行 break 才對
+	      high--;
+	    if (low >= high) break;
+	    // 修正點2：low 有可能跟 high 剛好交叉
+	    a[low++] = a[high];
+	
+	    // 移動 low
+	    while (low < high && a[low] <= base_value)
+	    // 修正點3：如果等於的話應該要執行 break 才對
+	      low++;
+	    if (low >= high) break;
+	    // 修正點4：low 有可能與 high 剛好交叉
+	    a[high--] = a[low];
+	  }
+	
+	    a[low] = base_value;
+	    // 修正點5：將最後的洞填滿
+	    return 0;
+	}
+	```
+
+###### 3. 我的第二版測試（加上 quicksort）
+
+- 這一次未報錯
+	```c
+	// sort an array of integers using Quicksort algorithm
+	
+	#include <stdio.h>
+	#define N 7
+	
+	void quicksort(int a[], int low, int high);
+	int split(int a[], int low, int high);
+	
+	int main(void)
+	{
+	  int a[N] = {12, 3, 6, 18, 7, 15, 10};
+	  // 假數字，用於測試
+	
+	  quicksort(a, 0, N - 1);
+	
+	  for (int i = 0; i < N; i++)
+	    printf("%d ", a[i]);
+	  printf("\n");
+	}
+	
+	void quicksort(int a[], int low, int high)
+	{
+	  int middle;
+	
+	  if (high <= low) return;
+	  middle = split(a, low, high);
+	  quicksort(a, low, middle - 1);
+	  quicksort(a, middle + 1, high);
+	}
+	
+	int split(int a[], int low, int high)
+	{
+	  int base_value;
+	
+	  base_value = a[low];
+	  for (;;) {
+	    // 移動 high
+	    while (low < high && a[high] >= base_value)
+	    // 修正點1：如果等於的話應該就要執行 break 才對
+	      high--;
+	    if (low >= high) break;
+	    // 修正點2：low 有可能跟 high 剛好交叉
+	    a[low++] = a[high];
+	
+	    // 移動 low
+	    while (low < high && a[low] <= base_value)
+	    // 修正點3：如果等於的話應該要執行 break 才對
+	      low++;
+	    if (low >= high) break;
+	    // 修正點4：low 有可能與 high 剛好交叉
+	    a[high--] = a[low];
+	  }
+	
+	    a[low] = base_value;
+	    // 修正點5：將最後的洞填滿
+	    return low;
+	}
+	```
+
+###### 4. 最終的程式
+
+```c
+// sort an array of integers using Quicksort algorithm
+
+#include <stdio.h>
+#define N 10
+
+void quicksort(int a[], int low, int high);
+int split(int a[], int low, int high);
+
+int main(void)
+{
+  int a[N];
+
+  printf("Enter 10 numbers to be sorted: ");
+  for (int i = 0; i < N; i++)
+    scanf("%d", &a[i]);
+
+  quicksort(a, 0, N - 1);
+
+  for (int i = 0; i < N; i++)
+    printf("%d ", a[i]);
+  printf("\n");
+}
+
+void quicksort(int a[], int low, int high)
+{
+  int middle;
+
+  if (high <= low) return;
+  middle = split(a, low, high);
+  quicksort(a, low, middle - 1);
+  quicksort(a, middle + 1, high);
+}
+
+int split(int a[], int low, int high)
+{
+  int base_value;
+
+  base_value = a[low];
+  for (;;) {
+    // 移動 high
+    while (low < high && a[high] >= base_value)
+    // 修正點1：如果等於的話應該就要執行 break 才對
+      high--;
+    if (low >= high) break;
+    // 修正點2：low 有可能跟 high 剛好交叉
+    a[low++] = a[high];
+
+    // 移動 low
+    while (low < high && a[low] <= base_value)
+    // 修正點3：如果等於的話應該要執行 break 才對
+      low++;
+    if (low >= high) break;
+    // 修正點4：low 有可能與 high 剛好交叉
+    a[high--] = a[low];
+  }
+
+    a[low] = base_value;
+    // 修正點5：將最後的洞填滿
+    return low;
+}
+
+```
