@@ -3,13 +3,16 @@
 ## Program overview
 
 
-| 題號  | 功能         | 觀念                                        | 連結                    |
-| --- | ---------- | ----------------------------------------- | --------------------- |
-| 範例一 | 計算數字的平均    | 學習定義與呼叫有回傳值的 function                     | [view](./average.c)   |
-| 範例二 | 將數字遞減並列印出來 | 學習定義與呼叫沒有回傳值的 function                    | [view](./countdown.c) |
-| 範例三 | 列印出一句話     | 學習定義與呼叫沒有參數的 function                     | [view](./pun2.c)      |
-| 範例四 | 測試數字是否為質數  | 將方程式結合布林值，綜和以上所學                          | [view](./prime.c)     |
-| 範例五 | 排序 10 個數字  | 學習 quicksort 的演算法，並且運用遞迴的 function 將其寫成程式 | [view](./qsort.c)     |
+| 題號       | 功能         | 觀念                                        | 連結                                      |
+| -------- | ---------- | ----------------------------------------- | --------------------------------------- |
+| 範例一      | 計算數字的平均    | 學習定義與呼叫有回傳值的 function                     | [view](./average.c)                     |
+| 範例二      | 將數字遞減並列印出來 | 學習定義與呼叫沒有回傳值的 function                    | [view](./countdown.c)                   |
+| 範例三      | 列印出一句話     | 學習定義與呼叫沒有參數的 function                     | [view](./pun2.c)                        |
+| 範例四      | 測試數字是否為質數  | 將方程式結合布林值，綜和以上所學                          | [view](./prime.c)                       |
+| 範例五      | 排序 10 個數字  | 學習 quicksort 的演算法，並且運用遞迴的 function 將其寫成程式 | [view](./qsort.c)                       |
+| Proj.1v1 | 由小到大排序數字   | 學習用 selection sort 的邏輯去排序順序               | [view](./programming-project_Ch9_1v1.c) |
+| Proj.1v2 | 同上         | 此為 version 1 程式的重構，用了較簡單的方法去寫             | [view](./programming-project_Ch9_1v2.c) |
+| Proj.8   | 玩花旗骰遊戲     | 寫出骰子的隨機點數，並且將程式拆成三段的函數來寫                  | [view](./programming-project_Ch9_8.c)   |
 <br><Br>
 
 ---
@@ -938,48 +941,765 @@ int split(int a[], int low, int high)
 
 #### 1. 第一版：測試單一一個 selection_sort
 
-<details>
-<summary>點擊展開：錯誤的 program</summary>
+>[!bug]- 錯誤的 program
+>```c
+>// This is my program for programming project 1 
+>// in C Programming: a modern approach
+>// This program is used to sort 
+>// a series of integers form low to high
+>
+>#include <stdio.h>
+>#define N 4
+>
+>void selection_sort(int a[], int n);
+>
+>int main(void)
+>{
+>  int a[N] = {1, 8, 2, 7};
+>  // 假數字，測試用
+>
+>  selection_sort(a, N);
+>
+>  for (int i = 0; i < N; i++)
+>    printf("%d", a[i]);
+>  printf("\n");
+>
+>  return 0;
+>}
+>
+>void selection_sort(int a[], int n)
+>{
+>  int base_value = a[0];
+>  int compare_num = n - 1;
+>
+>  while (compare_num > 0) {
+>    while (a[compare_num] <= base_value)
+>      compare_num--;
+>    base_value = a[compare_num--];
+>  }
+>  a[compare_num] = a[n - 1];
+>  a[n - 1] = a[compare_num];
+>}
+>```
 
-```c
-// This is my program for programming project 1 
-// in C Programming: a modern approach
-// This program is used to sort 
-// a series of integers form low to high
+>[!failure]- output
+>```
+>$ ./programming-project_Ch9_1 
+>7827
+>```
 
-#include <stdio.h>
-#define N 4
+>[!success]- 修正過後的 program
+>```c
+>// This is my program for programming project 1 
+>// in C Programming: a modern approach
+>// This program is used to sort 
+>// a series of integers form low to high
+>
+>#include <stdio.h>
+>#define N 4
+>
+>void selection_sort(int a[], int n);
+>
+>int main(void)
+>{
+>  int a[N] = {1, 8, 2, 7};
+>  // 假數字，測試用
+>
+>  selection_sort(a, N);
+>
+>  for (int i = 0; i < N; i++)
+>    printf("%d", a[i]);
+>  printf("\n");
+>
+>  return 0;
+>}
+>
+>void selection_sort(int a[], int n)
+>{
+>  int base_value = a[0], hollow = 0;
+>  int compare_num = n - 1;
+>
+>  while (compare_num > 0) {
+>    while (a[compare_num] <= base_value)
+>      compare_num--;
+>    hollow = compare_num;
+>    // 修正點：迴圈結束時 compare_num 會等於 0
+>    // 所以需要新的變數來儲存洞的位置
+>    base_value = a[compare_num--];
+>  }
+>  a[hollow] = a[n - 1];
+>  a[n - 1] = base_value;
+>  // 修正點：最後一格的位置要填的是最大的數字
+>}
+>```
 
-void selection_sort(int a[], int n);
+>[!success]- output
+>```
+>$ ./programming-project_Ch9_1 
+>1728
+>```
+<br>
 
-int main(void)
-{
- int a[N] = {1, 8, 2, 7};
- // 假數字，測試用
+#### 2. 第二版：加入遞迴
 
- selection_sort(a, N);
+>[!bug]- 錯誤的 program
+>```c
+>// This is my program for programming project 1 
+>// in C Programming: a modern approach
+>// This program is used to sort 
+>// a series of integers form low to high
+>
+>#include <stdio.h>
+>#define N 7
+>
+>void selection_sort(int a[], int n);
+>
+>int main(void)
+>{
+>  int a[N] = {1, 8, 2, 7, 3, 5, 6};
+>  // 假數字，測試用
+>
+>  selection_sort(a, N);
+>
+>  for (int i = 0; i < N; i++)
+>    printf("%d", a[i]);
+>  printf("\n");
+>
+>  return 0;
+>}
+>
+>void selection_sort(int a[], int n)
+>{
+>  int base_value = a[0], hollow = 0;
+>  int compare_num = n - 1;
+>
+>  while (compare_num > 0) {
+>    while (a[compare_num] <= base_value)
+>      compare_num--;
+>    hollow = compare_num;
+>    // 修正點：迴圈結束時 compare_num 會等於 0
+>    // 所以需要新的變數來儲存洞的位置
+>    base_value = a[compare_num--];
+>  }
+>  a[hollow] = a[n - 1];
+>  a[n - 1] = base_value;
+>  // 修正點：最後一格的位置要填的是最大的數字
+>
+>  if (n <= 0 ) return;
+>  selection_sort(a, n - 1);
+>}
+>```
 
- for (int i = 0; i < N; i++)
-   printf("%d", a[i]);
- printf("\n");
+- output:
+	```
+	$ ./programming-project_Ch9_1 
+	程式記憶體區段錯誤
+	```
 
- return 0;
-}
+>[!success]- 修正後的 program
+>```c
+>// This is my program for programming project 1 
+>// in C Programming: a modern approach
+>// This program is used to sort 
+>// a series of integers form low to high
+>
+>#include <stdio.h>
+>#define N 7
+>
+>void selection_sort(int a[], int n);
+>
+>int main(void)
+>{
+>  int a[N] = {1, 8, 2, 7, 3, 5, 6};
+>  // 假數字，測試用
+>
+>  selection_sort(a, N);
+>
+>  for (int i = 0; i < N; i++)
+>    printf("%d ", a[i]);
+>  printf("\n");
+>
+>  return 0;
+>}
+>
+>void selection_sort(int a[], int no_element)
+>{
+>  int base_value = a[0], hollow = 0;
+>  int compare_num = no_element - 1;
+>
+>  while (compare_num > 0) {
+>    while (compare_num > 0 && a[compare_num] <= base_value)
+>    // 修正點：有可能在內層就達到 0
+>      compare_num--;
+>    if (compare_num == 0) break;
+>    // 修正點：如果 compare_num 等於 0 的話就不應該更新數值
+>    hollow = compare_num;
+>    // 修正點：迴圈結束時 compare_num 會等於 0
+>    // 所以需要新的變數來儲存洞的位置
+>    base_value = a[compare_num--];
+>  }
+>  a[hollow] = a[no_element - 1];
+>  a[no_element - 1] = base_value;
+>  // 修正點：最後一格的位置要填的是最大的數字
+>
+>  if (no_element <= 2) return;
+>  selection_sort(a, no_element - 1);
+>}
+>```
+- output:
+	```
+	$ ./programming-project_Ch9_1 
+	1 2 3 5 6 7 8 
+	```
 
-void selection_sort(int a[], int n)
-{
- int base_value = a[0];
- int compare_num = n - 1;
+<br>
 
- while (compare_num > 0) {
-   while (a[compare_num] <= base_value)
-     compare_num--;
-   base_value = a[compare_num--];
- }
- a[compare_num] = a[n - 1];
- a[n - 1] = a[compare_num];
-}
-```
+#### 3. version 1: 最終板，加入數字輸入
 
-</details>
+- 增加了輸入數字的部份
+- 學習重點：
+	1. 要用 VLA 的話必須建立在已知元素個數的狀況，也就是**使用者要先輸入他要幾個數字**
+	2. 面對完全不知道元素個數的狀況，要先做一個大的陣列，接下來輸入第一個數字，再用 getchar 來探測下一個 program
 
+>[!success]- program
+>```c
+>// This is my program for programming project 1 
+>// in C Programming: a modern approach
+>// This program is used to sort 
+>// a series of integers form low to high
+>
+>#include <stdio.h>
+>#define MAX_LEN 100
+>
+>void selection_sort(long a[], int n);
+>
+>int main(void)
+>{
+>  int n = 0;
+>  long a[MAX_LEN];
+>  char ch;
+>
+>  printf("Eneter a series of integers: ");
+>  do {
+>    scanf("%ld", &a[n]);
+>    n++;
+>    ch = getchar();
+>    // 先掃描下一個數字
+>    if (ch == '\n') break;
+>    // 測試下一個字元是否為 '\n'
+>    // 是的話就結束
+>  } while (n <= MAX_LEN);
+>
+>  selection_sort(a, n);
+>
+>  for (int i = 0; i < n; i++)
+>    printf("%ld ", a[i]);
+>  printf("\n");
+>
+>  return 0;
+> }
+>
+> void selection_sort(long a[], int no_element)
+> {
+>  int base_value = a[0], hollow = 0;
+>  int compare_num = no_element - 1;
+>
+>  while (compare_num > 0) {
+>    while (compare_num > 0 && a[compare_num] <= base_value)
+>    // 修正點：有可能在內層就達到 0
+>      compare_num--;
+>    if (compare_num == 0) break;
+>    // 修正點：如果 compare_num 等於 0 的話就不應該更新數值
+>    hollow = compare_num;
+>    // 修正點：迴圈結束時 compare_num 會等於 0
+>    // 所以需要新的變數來儲存洞的位置
+>    base_value = a[compare_num--];
+>  }
+>  a[hollow] = a[no_element - 1];
+>  a[no_element - 1] = base_value;
+>  // 修正點：最後一格的位置要填的是最大的數字
+>
+>  if (no_element <= 2) return;
+>  selection_sort(a, no_element - 1);
+>}
+>```
+
+#### 4. version 2: 重構程式
+
+- 由於這個 program 實在太難讀了，且我自己覺得在排序的邏輯被 quicksort 的演算法影響到太多，所以我決定重構了這個程式
+
+>[!success]- program
+>```c
+>// This is my program for programming project 1 
+>// in C Programming: a modern approach
+>// This program is used to sort 
+>// a series of integers form low to high
+>
+>#include <stdio.h>
+>#define MAX_LEN 100
+>
+>void selection_sort(long a[], int n);
+>
+>int main(void)
+>{
+>  int n = 0;
+>  long a[MAX_LEN];
+>  char ch;
+>
+>  printf("Eneter a series of integers: ");
+>  do {
+>    scanf("%ld", &a[n]);
+>    n++;
+>    ch = getchar();
+>    if (ch == '\n') break;
+>  } while (n <= MAX_LEN);
+>
+>  selection_sort(a, n);
+>
+>  for (int i = 0; i < n; i++)
+>    printf("%ld ", a[i]);
+>  printf("\n");
+>
+>  return 0;
+>}
+>
+>void selection_sort(long a[], int n)
+>{
+>  int max_index;
+>  long temp_num;
+>
+>  max_index = 0;
+>  // 先假設 a[0] 是最大的
+>
+>  for (int i = 1; i < n; i++)
+>    if (a[i] > a[max_index])
+>      max_index = i;
+>  // 掃描數字，將比較大的數字紀錄到 max_index 上
+>
+>  temp_num = a[max_index];
+>  a[max_index] = a[n - 1];
+>  a[n - 1] = temp_num;
+>  // 交換數字
+>
+>  if (n <= 2) return;
+>  selection_sort(a, n - 1);
+>}
+>```
+
+<br>
+
+## Proj.8：花旗骰遊戲
+
+- 我是採用分段寫與分段測試的方式
+- 所以以下是我的各個測試版，也就是這個 program 的每一個段落
+
+#### 1. 第一版：骰骰子
+
+- 這個測試一次就成功了
+
+>[!success]- program
+>```c
+>// This is my program for programming project 8 
+>// in C Programming: a modern approach
+>// This program is used to 
+>// simulates the game of craps
+>
+>#include <stdio.h>
+>#include <stdbool.h>
+>#include <stdlib.h>
+>#include <time.h>
+>
+>int rool_dice(void);
+>bool play_game(void);
+>
+>int main(void)
+>{
+>  printf("%d\n", rool_dice());
+>
+>  return 0;
+>}
+>
+>int rool_dice(void)
+>{
+>  int sum = 0;
+>
+>  srand((unsigned) time(NULL));
+>  // 設定隨機書的開頭頁數
+>
+>  for (int i = 0; i < 2; i++ ) {
+>    sum += ( (rand() % 6) + 1 );
+>  }
+>
+>  return sum;
+>}
+>```
+
+<br>
+
+#### 2. 第二版：玩一次的花旗骰
+
+- 這次的錯誤是我將 `srand((unsigned) time(NULL))` (也就是將數字依據時間洗牌)的位置放錯了
+- 這行程式從頭到尾都只需要執行一次，因為如果每一次都重新洗牌的話時間都會是一樣的，導致數字永遠都從第一個開始且第一個數字都一樣 (因為是依據時間來排)，而不會輪到後面的數字
+
+
+>[!bug]- 錯誤的 program
+>```c
+>// This is my program for programming project 8 
+>// in C Programming: a modern approach
+>// This program is used to simulates the game of craps
+>
+>#include <stdio.h>
+>#include <stdbool.h>
+>#include <stdlib.h>
+>#include <time.h>
+>
+>int rool_dice(void);
+>bool play_game(void);
+>
+>int main(void)
+>{
+>  if (play_game())
+>    printf("You win!!!\n");
+>  else
+>    printf("You lose!!!\n");
+>
+>  return 0;
+>}
+>
+>bool play_game(void)
+>{
+>  int point, num;
+>
+>  num = rool_dice();
+>  printf("You rolled: %d\n", num);
+>  if (num == 7 || num == 11)
+>    return true;
+>  else if (num == 2 || num == 3 || num == 12)
+>    return false;
+>  else {
+>    point = num;
+>    printf("Your point is %d\n", point);
+>    for (;;) {
+>      num = rool_dice();
+>      printf("You rolled %d\n", num);
+>      if (num == point) return true;
+>      if (num == 7) return false;
+>    }
+>  }
+>}
+>
+>int rool_dice(void)
+>{
+>  int sum = 0;
+>
+>  srand((unsigned) time(NULL));
+>  // 設定隨機書的開頭頁數
+>
+>  for (int i = 0; i < 2; i++ ) {
+>    sum += ( (rand() % 6) + 1 );
+>  }
+>
+>  return sum;
+>}
+>```
+
+>[!failure]- output
+>Julian119@mx:~/常用/程式/C學習<br>
+>$ ./programming-project_Ch9_8<br>
+>You rolled: 4<br>
+>Your point is 4<br>
+>You rolled 4<br>
+>You win!!!<br>
+>\**錯誤點： point 與骰到的數字一模一樣
+
+>[!success]- 修正後的 program
+>```c
+>// This is my program for programming project 8 
+>// in C Programming: a modern approach
+>// This program is used to simulates the game of craps
+>
+>#include <stdio.h>
+>#include <stdbool.h>
+>#include <stdlib.h>
+>#include <time.h>
+>
+>int roll_dice(void);
+>bool play_game(void);
+>
+>int main(void)
+>{
+>  srand((unsigned) time(NULL));
+>  // 修正：整個程式中只需要重新洗牌亂數表一次
+>  // 如果一直洗牌就會因為頁數都相同導致數字一樣
+>  // (因為程式執行很快，導致時間相同，頁數也相同)
+>
+>  if (play_game())
+>    printf("You win!!!\n");
+>  else
+>    printf("You lose!!!\n");
+>
+>  return 0;
+>}
+>
+>bool play_game(void)
+>{
+>  int point, num;
+>
+>  num = roll_dice();
+>  printf("You rolled: %d\n", num);
+>  if (num == 7 || num == 11)
+>    return true;
+>  else if (num == 2 || num == 3 || num == 12)
+>    return false;
+>  else {
+>    point = num;
+>    printf("Your point is %d\n", point);
+>    for (;;) {
+>      num = roll_dice();
+>      printf("You rolled %d\n", num);
+>      if (num == point) return true;
+>      if (num == 7) return false;
+>    }
+>  }
+>}
+>
+>int roll_dice(void)
+>{
+>  int sum = 0;
+>
+>  for (int i = 0; i < 2; i++ ) {
+>    sum += ( (rand() % 6) + 1 );
+>  }
+>
+>  return sum;
+>}
+>```
+
+>[!success]- 正確的 output
+>You rolled: 8<br>
+Your point is 8<br>
+You rolled 10<br>
+You rolled 8<br>
+You win!!!<br>
+
+<br>
+
+#### 3. 最終版：玩多次的花旗骰並計數
+
+- 這次的錯誤在由於 getchar 的特性導致換行符會被讀進去
+- 所以我加上了 `while (getchar() != '\n');` 讓它一直吃掉其他數字直到換行符出現
+
+>[!bug]- 錯誤的 program
+>```c
+>// This is my program for programming project 8 
+>// in C Programming: a modern approach
+>// This program is used to simulates the game of craps
+>
+>#include <stdio.h>
+>#include <stdbool.h>
+>#include <stdlib.h>
+>#include <time.h>
+>#include <ctype.h>
+>
+>int roll_dice(void);
+>bool play_game(void);
+>
+>int main(void)
+>{
+>  int no_win = 0, no_lose = 0;
+>  char answer;
+>
+>  srand((unsigned) time(NULL));
+>  // 修正：整個程式中只需要重新洗牌亂數表一次
+>  // 如果一直洗牌就會因為頁數都相同導致數字一樣
+>  // (因為程式執行很快，導致時間相同，頁數也相同)
+>
+>  do {
+>    if (play_game()) {
+>      printf("You win!!!\n");
+>      no_win++;
+>    }
+>    else {
+>      printf("You lose!!!\n");
+>      no_lose++;
+>    }
+>
+>    printf("\nPlay again? ");
+>    answer = getchar();
+>    printf("\n");
+>    if (toupper(answer) == 'N') break;
+>  } while (1);
+>
+>  printf("Wins: %d", no_win);
+>  printf("  ");
+>  printf("Losses: %d\n", no_lose);
+>
+>  return 0;
+>}
+>
+>bool play_game(void)
+>{
+>  int point, num;
+>
+>  num = roll_dice();
+>  printf("You rolled: %d\n", num);
+>  if (num == 7 || num == 11)
+>    return true;
+>  else if (num == 2 || num == 3 || num == 12)
+>    return false;
+>  else {
+>    point = num;
+>    printf("Your point is %d\n", point);
+>    for (;;) {
+>      num = roll_dice();
+>      printf("You rolled %d\n", num);
+>      if (num == point) return true;
+>      if (num == 7) return false;
+>    }
+>  }
+>}
+>
+>int roll_dice(void)
+>{
+>  int sum = 0;
+>
+>  for (int i = 0; i < 2; i++ ) {
+>    sum += ( (rand() % 6) + 1 );
+>  }
+>
+>  return sum;
+>}
+>```
+
+>[!failure]- output
+>$ ./programming-project_Ch9_8 <br>
+>You rolled: 10<br>
+>Your point is 10<br>
+>You rolled 7<br>
+>You lose!!!<br>
+><br>
+>Play again? y<br>
+><br>
+>You rolled: 5<br>
+>Your point is 5<br>
+>You rolled 5<br>
+>You win!!!<br>
+><br>
+>Play again? <br>
+>You rolled: 6<br>
+>Your point is 6<br>
+>You rolled 8<br>
+>You rolled 10<br>
+>You rolled 4<br>
+>You rolled 7<br>
+>You lose!!!<br>
+><br>
+>Play again? n<br>
+><br>
+>Wins: 1  Losses: 2
+
+>[!success]- 修正後的 program
+>```c
+>// This is my program for programming project 8 
+>// in C Programming: a modern approach
+>// This program is used to simulates the game of craps
+>
+>#include <stdio.h>
+>#include <stdbool.h>
+>#include <stdlib.h>
+>#include <time.h>
+>#include <ctype.h>
+>
+>int roll_dice(void);
+>bool play_game(void);
+>
+>int main(void)
+>{
+>  int no_win = 0, no_lose = 0;
+>  char answer;
+>
+>  srand((unsigned) time(NULL));
+>  // 修正：整個程式中只需要重新洗牌亂數表一次
+>  // 如果一直洗牌就會因為頁數都相同導致數字一樣
+>  // (因為程式執行很快，導致時間相同，頁數也相同)
+>
+>  do {
+>    if (play_game()) {
+>      printf("You win!!!\n");
+>      no_win++;
+>    }
+>    else {
+>      printf("You lose!!!\n");
+>      no_lose++;
+>    }
+>
+>    printf("\nPlay again? ");
+>    answer = getchar();
+>    while (getchar() != '\n');
+>    // 一直吃掉剩下的數字直到換行符出現
+>    printf("\n");
+>    if (toupper(answer) == 'N') break;
+>  } while (1);
+>
+>  printf("Wins: %d", no_win);
+>  printf("  ");
+>  printf("Losses: %d\n", no_lose);
+>
+>  return 0;
+>}
+>
+>bool play_game(void)
+>{
+>  int point, num;
+>
+>  num = roll_dice();
+>  printf("You rolled: %d\n", num);
+>  if (num == 7 || num == 11)
+>    return true;
+>  else if (num == 2 || num == 3 || num == 12)
+>    return false;
+>  else {
+>    point = num;
+>    printf("Your point is %d\n", point);
+>    for (;;) {
+>      num = roll_dice();
+>      printf("You rolled %d\n", num);
+>      if (num == point) return true;
+>      if (num == 7) return false;
+>    }
+>  }
+>}
+>
+>int roll_dice(void)
+>{
+>  int sum = 0;
+>
+>  for (int i = 0; i < 2; i++ ) {
+>    sum += ( (rand() % 6) + 1 );
+>  }
+>
+>  return sum;
+>}
+>```
+
+>[!success]- output
+>You rolled: 5<br>
+>Your point is 5<br>
+>You rolled 6<br>
+>You rolled 8<br>
+>You rolled 8<br>
+>You rolled 4<br>
+>You rolled 5<br>
+>You win!!!<br>
+><br>
+>Play again? y<br>
+><br>
+>You rolled: 10<br>
+>Your point is 10<br>
+>You rolled 4<br>
+>You rolled 7<br>
+>You lose!!!<br>
+><br>
+>Play again? n<br>
+><br>
+>Wins: 1  Losses: 1
