@@ -931,9 +931,9 @@ int split(int a[], int low, int high)
 ```
 <br><br>
 
-# Programming project
+## Programming project
 
-## Proj.1: 將數字從小排到大
+### Proj.1: 將數字從小排到大
 
 - 由於這一個 program 在寫的時候才剛學完 quicksort，導致我用了很複雜的寫法
 - 所以在一次次的修正測試後我才選擇再寫了一個 version 2 ，用簡單的寫法再寫一次
@@ -1288,7 +1288,7 @@ int split(int a[], int low, int high)
 
 <br>
 
-## Proj.8：花旗骰遊戲
+### Proj.8：花旗骰遊戲
 
 - 我是採用分段寫與分段測試的方式
 - 所以以下是我的各個測試版，也就是這個 program 的每一個段落
