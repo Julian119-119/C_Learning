@@ -10,7 +10,9 @@
 ## 學習環境
 * **OS:** MX Linux 23.6
 * **Compiler:** GCC
-* **Editor:** 在終端機上用的 nano
+* **Editor:** 
+	* 原本：在終端機上用的 nano
+	* 現在：VS Code
 * **Version Control:** Git & GitHub
 
 <br><br>
@@ -27,8 +29,8 @@
 | **06**  | Loops                                   |   ✅    |            [view](./Ch6_loop)            |
 | **07**  | Basic Types                             |   ✅    |         [view](./Ch7_Basic-Type)         |
 | **08**  | Arrays                                  |   ✅    |           [view](./Ch8_arrays)           |
-| **09**  | Functions                               |   🔄   |          [view](./Ch9_function)          |
-| **10**  | Program Organization                    |   ⬜    |                                          |
+| **09**  | Functions                               |   ✅    |          [view](./Ch9_function)          |
+| **10**  | Program Organization                    |   🔄   |   [view](./Ch10_program-organization)    |
 | **11**  | Pointers                                |   ⬜    |                                          |
 | **12**  | Pointers and Arrays                     |   ⬜    |                                          |
 | **13**  | Strings                                 |   ⬜    |                                          |

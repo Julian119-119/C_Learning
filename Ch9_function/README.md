@@ -926,3 +926,60 @@ int split(int a[], int low, int high)
 }
 
 ```
+<br><br>
+
+# Programming project
+
+## Proj.1: 將數字從小排到大
+
+- 由於這一個 program 在寫的時候才剛學完 quicksort，導致我用了很複雜的寫法
+- 所以在一次次的修正測試後我才選擇再寫了一個 version 2 ，用簡單的寫法再寫一次
+- 也才有了這麼多版
+
+#### 1. 第一版：測試單一一個 selection_sort
+
+<details>
+<summary>點擊展開：錯誤的 program</summary>
+
+```c
+// This is my program for programming project 1 
+// in C Programming: a modern approach
+// This program is used to sort 
+// a series of integers form low to high
+
+#include <stdio.h>
+#define N 4
+
+void selection_sort(int a[], int n);
+
+int main(void)
+{
+ int a[N] = {1, 8, 2, 7};
+ // 假數字，測試用
+
+ selection_sort(a, N);
+
+ for (int i = 0; i < N; i++)
+   printf("%d", a[i]);
+ printf("\n");
+
+ return 0;
+}
+
+void selection_sort(int a[], int n)
+{
+ int base_value = a[0];
+ int compare_num = n - 1;
+
+ while (compare_num > 0) {
+   while (a[compare_num] <= base_value)
+     compare_num--;
+   base_value = a[compare_num--];
+ }
+ a[compare_num] = a[n - 1];
+ a[n - 1] = a[compare_num];
+}
+```
+
+</details>
+
