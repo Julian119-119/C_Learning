@@ -30,7 +30,7 @@
 | **07**  | Basic Types                             |   ✅    |         [view](./Ch7_Basic-Type)         |
 | **08**  | Arrays                                  |   ✅    |           [view](./Ch8_arrays)           |
 | **09**  | Functions                               |   ✅    |          [view](./Ch9_function)          |
-| **10**  | Program Organization                    |   🔄   |   [view](./Ch10_program-organization)    |
+| **10**  | Program Organization                    |   ✅    |   [view](./Ch10_program-organization)    |
 | **11**  | Pointers                                |   ⬜    |                                          |
 | **12**  | Pointers and Arrays                     |   ⬜    |                                          |
 | **13**  | Strings                                 |   ⬜    |                                          |

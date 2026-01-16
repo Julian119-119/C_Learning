@@ -3,11 +3,12 @@
 ## Program overview
 
 
-| 題號      | 功能                 | 觀念                                       | 連結                       |
-| ------- | ------------------ | ---------------------------------------- | ------------------------ |
-| example | stack 結構的模板        | 學習 stack 的觀念，並利用全域變數在 C 重現。              | [view](./simulate_stack) |
-| 範例一     | 玩猜數字遊戲             | 實際運用全域變數                                 | [view](./guess.c)        |
-| 範例二     | 輸入五張撲克牌的花色與點數後判斷牌型 | 綜和目前所學的，並且利用複雜的程式學習 program organization | [view](./poker.c)        |
+| 題號      | 功能                 | 觀念                                       | 連結                                     |
+| ------- | ------------------ | ---------------------------------------- | -------------------------------------- |
+| example | stack 結構的模板        | 學習 stack 的觀念，並利用全域變數在 C 重現。              | [view](./simulate_stack)               |
+| 範例一     | 玩猜數字遊戲             | 實際運用全域變數                                 | [view](./guess.c)                      |
+| 範例二     | 輸入五張撲克牌的花色與點數後判斷牌型 | 綜和目前所學的，並且利用複雜的程式學習 program organization | [view](./poker.c)                      |
+| Proj.7  | 將多個數字轉換為七段顯示器      | 用陣列當作對照的編碼，並綜和運用目前所學的東西來寫程式              | [view](./programming-project_Ch10_7.c) |
 <br><br>
 
 ---
@@ -1780,3 +1781,402 @@
 > 
 > Enter a card: 0
 >```
+
+<br><br>
+
+## Programming project
+
+### Proj.7: 將多個數字轉換為七段顯示器
+
+#### 初版：輸入一個數字並轉換成 seven-segment number
+
+- seven-segment number 每一個符號的對應位置
+	```
+	(col)  0 1 2 3 (row)
+	  0      _
+	  1    | _ |
+	  2    | _ |
+	  3  
+	```
+- 每一個符號的對應數字
+	```
+	  0
+	  _
+	5|_| 1
+	  6
+	4|_| 2
+	  3
+	```
+
+>[!success]- program
+>```c
+> // This is my program for programming project 7 
+> // in C Programming: a modern
+> // approach This program is used to 
+> // prompts the user for a number and then
+> // displays the number
+> 
+> #include <stdio.h>
+> 
+> #define MAX_DIGITS 1
+> 
+> // external variable
+> // segments: 數字與哪一個位置要亮的對照表
+> const int segments[10][7] = {{1, 1, 1, 1, 1, 1, 0},   // 0
+>                              {0, 1, 1, 0, 0, 0, 0},   // 1
+>                              {1, 1, 0, 1, 1, 0, 1},   // 2
+>                              {1, 1, 1, 1, 0, 0, 1},   // 3
+>                              {0, 1, 1, 0, 0, 1, 1},   // 4
+>                              {1, 0, 1, 1, 0, 1, 1},   // 5
+>                              {1, 0, 1, 1, 1, 1, 1},   // 6
+>                              {1, 1, 1, 0, 0, 0, 0},   // 7
+>                              {1, 1, 1, 1, 1, 1, 1},   // 8
+>                              {1, 1, 1, 1, 0, 1, 1}};  // 9
+> // digits: 展示最終數字的顯示結果，每一個數字為 4 X 3，且
+> //         最旁邊要留一個空白的 col 區隔其他數字，所以為
+> //         4 X 4
+> char digits[4][MAX_DIGITS * 4];
+> 
+> // prototype
+> void clear_digits_array(void);
+> void process_digit(int num, int position);
+> void print_digits_array(void);
+> 
+> int main(void) {
+>   int num;
+> 
+>   clear_digits_array();
+>   printf("Enter a number: ");
+>   scanf("%d", &num);
+> 
+>   process_digit(num, 0);
+>   print_digits_array();
+> 
+>   return 0;
+> }
+> 
+> // clear_digits_array: 清空 digits[][]
+> void clear_digits_array(void) {
+>   for (int row = 0; row < 4; row++) {
+>     for (int col = 0; col < MAX_DIGITS * 4; col++) {
+>       digits[row][col] = ' ';
+>     }
+>   }
+> }
+> 
+> // process_digit: 將數字轉換成 seven-segment number，
+> //                並儲存進 digits[][]
+> void process_digit(int num, int position) {
+>   for (int i = 0; i < 7; i++) {
+>     if (segments[num][i]) {
+>       switch (i) {
+>         case 0:
+>           digits[1][2] = '_';
+>           break;
+>         case 1:
+>           digits[2][3] = '|';
+>           break;
+>         case 2:
+>           digits[3][3] = '|';
+>           break;
+>         case 3:
+>           digits[3][2] = '_';
+>           break;
+>         case 4:
+>           digits[3][1] = '|';
+>           break;
+>         case 5:
+>           digits[2][1] = '|';
+>           break;
+>         case 6:
+>           digits[2][2] = '_';
+>           break;
+>       }
+>     }
+>   }
+> }
+> 
+> // 印出數字
+> void print_digits_array(void) {
+>   for (int row = 0; row < 4; row++) {
+>     for (int col = 0; col < MAX_DIGITS * 4; col++) {
+>       switch (digits[row][col]) {
+>         case ' ':
+>           printf(" ");
+>           break;
+>         case '|':
+>           printf("|");
+>           break;
+>         case '_':
+>           printf("_");
+>           break;
+>       }
+>     }
+>     printf("\n");
+>   }
+>   printf("\n");
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./programming-project_Ch10_7 
+>Enter a number: 2
+>    
+>  _ 
+>  _|
+> |_ 
+>```
+
+#### 最終版：輸入多個數字
+
+- 學習重點：
+	1. 如果遇到符號與數字混用的，先用 `char` 的型別讀進來，再將其轉換就行
+	2. 用在 \<ctype> 中的 `isdigit()` 來判定是否為數字
+	3. 指派的 precedence 較 equality operator 低，所以如果要先指派就要加 ()
+
+>[!bug]- 錯誤的 program
+>```c
+> // This is my program for programming project 7 
+> // in C Programming: a modern
+> // approach This program is used to prompts the user for a number and then
+> // displays the number
+> 
+> #include <stdio.h>
+> 
+> #define MAX_DIGITS 10
+> 
+> // external variable
+> // segments: 數字與哪一個位置要亮的對照表
+> const int segments[10][7] = {{1, 1, 1, 1, 1, 1, 0},   // 0
+>                              {0, 1, 1, 0, 0, 0, 0},   // 1
+>                              {1, 1, 0, 1, 1, 0, 1},   // 2
+>                              {1, 1, 1, 1, 0, 0, 1},   // 3
+>                              {0, 1, 1, 0, 0, 1, 1},   // 4
+>                              {1, 0, 1, 1, 0, 1, 1},   // 5
+>                              {1, 0, 1, 1, 1, 1, 1},   // 6
+>                              {1, 1, 1, 0, 0, 0, 0},   // 7
+>                              {1, 1, 1, 1, 1, 1, 1},   // 8
+>                              {1, 1, 1, 1, 0, 1, 1}};  // 9
+> // digits: 展示最終數字的顯示結果，每一個數字為 4 X 3，且
+> //         最旁邊要留一個空白的 col 區隔其他數字，所以為
+> //         4 X 4
+> char digits[4][MAX_DIGITS * 4];
+> 
+> // prototype
+> void clear_digits_array(void);
+> void process_digit(int num, int position);
+> void print_digits_array(void);
+> 
+> int main(void) {
+>   int num;
+> 
+>   clear_digits_array();
+>   printf("Enter a number: ");
+>   for (int i = 0; i < MAX_DIGITS; i++) {
+>     scanf("%1d", &num);
+>     process_digit(num, i);
+>   }
+>   print_digits_array();
+> 
+>   return 0;
+> }
+> 
+> // clear_digits_array: 清空 digits[][]
+> void clear_digits_array(void) {
+>   for (int row = 0; row < 4; row++) {
+>     for (int col = 0; col < MAX_DIGITS * 4; col++) {
+>       digits[row][col] = ' ';
+>     }
+>   }
+> }
+> 
+> // process_digit: 將數字轉換成 seven-segment number，
+> //                並儲存進 digits[][]
+> void process_digit(int num, int position) {
+>   int array_position = position * 4;
+> 
+>   for (int i = 0; i < 7; i++) {
+>     if (segments[num][i]) {
+>       switch (i) {
+>         case 0:
+>           digits[array_position + 0][array_position + 1] = '_';
+>           break;
+>         case 1:
+>           digits[array_position + 1][array_position + 2] = '|';
+>           break;
+>         case 2:
+>           digits[array_position + 2][array_position + 2] = '|';
+>           break;
+>         case 3:
+>           digits[array_position + 2][array_position + 1] = '_';
+>           break;
+>         case 4:
+>           digits[array_position + 2][array_position + 0] = '|';
+>           break;
+>         case 5:
+>           digits[array_position + 1][array_position + 0] = '|';
+>           break;
+>         case 6:
+>           digits[array_position + 1][array_position + 1] = '_';
+>           break;
+>       }
+>     }
+>   }
+> }
+> 
+> // 印出數字
+> void print_digits_array(void) {
+>   for (int row = 0; row < 4; row++) {
+>     for (int col = 0; col < MAX_DIGITS * 4; col++) {
+>       switch (digits[row][col]) {
+>         case ' ':
+>           printf(" ");
+>           break;
+>         case '|':
+>           printf("|");
+>           break;
+>         case '_':
+>           printf("_");
+>           break;
+>       }
+>     }
+>     printf("\n");
+>   }
+>   printf("\n");
+> }
+>```
+
+>[!failure]- 錯誤的 output
+>```
+>$ ./programming-project_Ch10_7 
+>Enter a number: 123456789
+>9
+>                                        
+>  |                                     
+>  |                                     
+>                                        
+>```
+
+>[!success]- 修正後的 program
+>```c
+> // This is my program for programming project 7 
+> // in C Programming: a modern
+> // approach This program is used to prompts the user for a number and then
+> // displays the number
+> 
+> #include <stdio.h>
+> 
+> #define MAX_DIGITS 10
+> 
+> // external variable
+> // segments: 數字與哪一個位置要亮的對照表
+> const int segments[10][7] = {{1, 1, 1, 1, 1, 1, 0},   // 0
+>                              {0, 1, 1, 0, 0, 0, 0},   // 1
+>                              {1, 1, 0, 1, 1, 0, 1},   // 2
+>                              {1, 1, 1, 1, 0, 0, 1},   // 3
+>                              {0, 1, 1, 0, 0, 1, 1},   // 4
+>                              {1, 0, 1, 1, 0, 1, 1},   // 5
+>                              {1, 0, 1, 1, 1, 1, 1},   // 6
+>                              {1, 1, 1, 0, 0, 0, 0},   // 7
+>                              {1, 1, 1, 1, 1, 1, 1},   // 8
+>                              {1, 1, 1, 1, 0, 1, 1}};  // 9
+> // digits: 展示最終數字的顯示結果，每一個數字為 4 X 3，且
+> //         最旁邊要留一個空白的 col 區隔其他數字，所以為
+> //         4 X 4
+> char digits[4][MAX_DIGITS * 4];
+> 
+> // prototype
+> void clear_digits_array(void);
+> void process_digit(int num, int position);
+> void print_digits_array(void);
+> 
+> int main(void) {
+>   int num;
+> 
+>   clear_digits_array();
+>   printf("Enter a number: ");
+>   for (int i = 0; i < MAX_DIGITS; i++) {
+>     scanf("%1d", &num);
+>     process_digit(num, i);
+>   }
+>   print_digits_array();
+> 
+>   return 0;
+> }
+> 
+> // clear_digits_array: 清空 digits[][]
+> void clear_digits_array(void) {
+>   for (int row = 0; row < 4; row++) {
+>     for (int col = 0; col < MAX_DIGITS * 4; col++) {
+>       digits[row][col] = ' ';
+>     }
+>   }
+> }
+> 
+> // process_digit: 將數字轉換成 seven-segment number，
+> //                並儲存進 digits[][]
+> void process_digit(int num, int position) {
+>   int array_position = position * 4;
+> 
+>   for (int i = 0; i < 7; i++) {
+>     if (segments[num][i]) {
+>       switch (i) {
+>         case 0:
+>           digits[array_position + 0][array_position + 1] = '_';
+>           break;
+>         case 1:
+>           digits[array_position + 1][array_position + 2] = '|';
+>           break;
+>         case 2:
+>           digits[array_position + 2][array_position + 2] = '|';
+>           break;
+>         case 3:
+>           digits[array_position + 2][array_position + 1] = '_';
+>           break;
+>         case 4:
+>           digits[array_position + 2][array_position + 0] = '|';
+>           break;
+>         case 5:
+>           digits[array_position + 1][array_position + 0] = '|';
+>           break;
+>         case 6:
+>           digits[array_position + 1][array_position + 1] = '_';
+>           break;
+>       }
+>     }
+>   }
+> }
+> 
+> // 印出數字
+> void print_digits_array(void) {
+>   for (int row = 0; row < 4; row++) {
+>     for (int col = 0; col < MAX_DIGITS * 4; col++) {
+>       switch (digits[row][col]) {
+>         case ' ':
+>           printf(" ");
+>           break;
+>         case '|':
+>           printf("|");
+>           break;
+>         case '_':
+>           printf("_");
+>           break;
+>       }
+>     }
+>     printf("\n");
+>   }
+>   printf("\n");
+> }
+>```
+
+>[!success]- 最終的 output
+>```
+>$ ./programming-project_Ch10_7 
+>Enter a number: 123456789456
+>     _   _       _   _   _   _   _       _   _  
+>  |  _|  _| |_| |_  |_    | |_| |_| |_| |_  |_  
+>  | |_   _|   |  _| |_|   | |_|  _|   |  _| |_| 
+>                                                
+>```
+
