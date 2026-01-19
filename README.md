@@ -31,7 +31,7 @@
 | **08**  | Arrays                                  |   ✅    |           [view](./Ch8_arrays)           |
 | **09**  | Functions                               |   ✅    |          [view](./Ch9_function)          |
 | **10**  | Program Organization                    |   ✅    |   [view](./Ch10_program-organization)    |
-| **11**  | Pointers                                |   ⬜    |                                          |
+| **11**  | Pointers                                |   🔄   |                [view](./)                |
 | **12**  | Pointers and Arrays                     |   ⬜    |                                          |
 | **13**  | Strings                                 |   ⬜    |                                          |
 | **14**  | The Preprocessor                        |   ⬜    |                                          |
