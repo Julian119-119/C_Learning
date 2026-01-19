@@ -18,9 +18,9 @@ graph TD;
     node1["0|1|0|1|1|0|1|1"];
 ```
 - 因為主記憶體有許多的 byte 所組成，所以每一個 byte 自然會需要一個**位置的編號 (address)** 來讓我們可以找到它，而位址與陣列一樣都是從 **0 開始數到 n - 1**<br>以下為示意圖
-	- ![](address_schematic.png)
+	- ![](./attachments/address_schematic.png)
 - 如果一個變數佔據了多個位置，就會以最前面的位置來作為變數位置的代號<br>E.g: i 的位置代號為 2000
-	- ![](variable_address_schematic.png)
+	- ![](./attachments/variable_address_schematic.png)
 - pointer variable (指標變數)： 用以**儲存變數的位置**。僅僅只有存下位置，而沒有存下值 (像是電腦的中的 inode 之於 block)
 - 假設 p 為 pointer variable 而 i 為 variable。若 p 儲存下了 i 的位置，則我們稱 p 指向 i
 	```mermaid
@@ -85,6 +85,7 @@ graph TD;
 		```c
 		p = &i;
 		```
+		
 		```mermaid
 		graph LR;
 		  P["p"];
