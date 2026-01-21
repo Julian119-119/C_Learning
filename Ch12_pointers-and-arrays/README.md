@@ -20,12 +20,12 @@
 		int a[10], *p;
 		p = &a[0];
 		```
-		示意圖<br>![[c-programming_a-modern-approach_ch12_1.png]]
+		示意圖<br>![](./Ch12_attachment/c-programming_a-modern-approach_ch12_1.png)
 	2. 將數值存入就會變成
 		```c
 		*p = 5;
 		```
-		示意圖：<br>![[c-programming_a-modern-approach_ch12_2.png]]
+		示意圖：<br>![](./Ch12_attachment/c-programming_a-modern-approach_ch12_2.png)
 - 除了之前提過的部份，也可以對於 p 執行 pointer arithmetic (or address arithmetic) ，用以**讀取陣列中的其他元素**
 - C 所支持的 pointer arithmetic:
 	1. Adding an integer to a pointer 
@@ -44,17 +44,17 @@
 		```c
 		p = &a[2];
 		```
-		![[c-programming_a-modern-approach_ch12_3.png]]
+		![](./Ch12_attachment/c-programming_a-modern-approach_ch12_3.png)
 	2. 
 		```c
 		q = p + 3;
 		```
-		![[c-programming_a-modern-approach_ch12_4.png]]
+		![](./Ch12_attachment/c-programming_a-modern-approach_ch12_4.png)
 	3. 
 		```c
 		p += 6;
 		```
-		![[c-programming_a-modern-approach_ch12_5.png]]
+		![](./Ch12_attachment/c-programming_a-modern-approach_ch12_5.png)
 <br>
 
 #### 三，Subtracting an Integer from a Pointer
@@ -64,17 +64,17 @@
 		```c
 		p = &a[8];
 		```
-		![[c-programming_a-modern-approach_ch12_6.png]]
+		![](./Ch12_attachment/c-programming_a-modern-approach_ch12_6.png)
 	2. 
 		```c
 		q = p - 3;
 		```
-		![[c-programming_a-modern-approach_ch12_7.png]]
+		![](./Ch12_attachment/c-programming_a-modern-approach_ch12_7.png)
 	3. 
 		```c
 		p -= 6;
 		```
-		![[c-programming_a-modern-approach_ch12_8.png]]
+		![](./Ch12_attachment/c-programming_a-modern-approach_ch12_8.png)
 <br>
 
 #### 四，Subtracting One Pointer from Another
@@ -90,7 +90,7 @@
 		i = q - p;
 		// i is -4;
 		```
-		![[c-programming_a-modern-approach_ch12_9.png]]
+		![](./Ch12_attachment/c-programming_a-modern-approach_ch12_9.png)
 <br>
 
 #### 五，Comparing Pointers
@@ -132,9 +132,9 @@
 	```
 	- 雖然 a\[N] 並不存在，但在這裡是合法的，因為 for statement 不會企圖去存取 a\[N] (因為是 < 而不是 <=)
 	- 示意圖：
-		1. 第一次迴圈：<br>![[c-programming_a-modern-approach_ch12_10.png]]
-		2. 第二次迴圈<br>![[c-programming_a-modern-approach_ch12_11.png]]
-		3. 第三次迴圈<br>![[c-programming_a-modern-approach_ch12_12.png]]
+		1. 第一次迴圈：<br>![](./Ch12_attachment/c-programming_a-modern-approach_ch12_10.png)
+		2. 第二次迴圈<br>![](./Ch12_attachment/c-programming_a-modern-approach_ch12_11.png)
+		3. 第三次迴圈<br>![](./Ch12_attachment/c-programming_a-modern-approach_ch12_12.png)
 <br>
 
 #### 二，Combining the \* and \++ Operators
@@ -292,7 +292,7 @@
 
 #### 一， Processing the Elements of a Multidimensional Array
 
-- 在 Ch8 中有提到 c 儲存二維陣列的時候是用 row-major order，也就代表對於 c 而言，多維陣列會長的像以下這樣<br>![[c-programming_a-modern-approach_ch12_13.png]]
+- 在 Ch8 中有提到 c 儲存二維陣列的時候是用 row-major order，也就代表對於 c 而言，多維陣列會長的像以下這樣<br>![](./Ch12_attachment/c-programming_a-modern-approach_ch12_13.png)
 - 所以可以利用這個特性，先**宣告一個指標在指向陣列中 row 0 與 col 0 的位子再遞增**就可以利用全部的元素了<br>E.g:
 	```c
 	int a[NUM_ROWS][NUM_COLS];
