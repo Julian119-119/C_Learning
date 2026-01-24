@@ -315,3 +315,253 @@
 	```
 	- 但這樣換過去其實會讓易讀性降低
 <br>
+
+#### 二，Processing the **Rows** of a Multidimensional Array
+
+- 以下為在多維陣列中，如果只要處理一個 row 的其他方法
+	1. initialize (觀察 row i)
+		```c
+		p = &a[i][0];
+		```
+		等價於
+		```c
+		p = a[i];
+		```
+		因為 a\[i] 等價於 \*(a + i)，所以 p = &a\[i]\[0] 等價於 <br>&(\*(a\[i] + 0))  (也就是 **row i 中的第一個元素的真實值**) ，也就等價於 a\[i]
+	2. E.g:
+		```c
+		int a[NUM_ROWS][NUM_COLS], *p, i;
+		...
+		for (p = a[i]; p < a[i] + NUM_COLS; p++)
+		  *p = 0;
+		```
+		- *備註： `a[i] + NUM_COLS` 為在 a 中 row i 的第一個元素加 column 的數量（也就是 row i 中最後一個元素）*
+- 也可以利用這個技巧**只將一個 row 作為引數傳送過去**<br>E.g:
+	```c
+	largest = find_largest(a[i], NUM_COLS)
+	```
+<br>
+
+#### 三，Processing the **Columns** of a Multidimensional Array
+
+- E.g:
+	```c
+	int a[NUM_ROWS][NUM_COLS], (*p)[NUM_COLS], i;
+	...
+	for (p = &a[0]; p < &a[NUM_ROWS]; p++)
+	  (*p)[i] = 0;
+	```
+	1. `int (*p)[NUM_COLS]` 
+		- 宣告一個指向擁有 NUM_COLS 元素個數的陣列。接下來會用於**指向一整個 row**。
+		- 換到下一個指向時會一次跳 NUM_COLS (也就是切換到下一個 row) 
+		- *注意：() 不可省略，如果省略就會變成指標的陣列，我們現在要的是指向陣列的指標*
+	2. `P = &a[0]` 將指標 p 指向 a 的 row 0
+	3. `p++` 更新 p 的指向，切換到下一個 row
+	4. `(*p)[i] = 0` 因為 p 代表的是一整個 row，所以 (\*p)\[i] 就是指派這一個 row 中的 col i 為 0
+<br>
+
+#### 四，Using the Name of a Multidimensional Array as a Pointer
+
+- 以下會用到的變數的宣告
+	```c
+	int a[NUM_ROWS][NUM_COLS]
+	```
+- `a` 不是代指 a\[0]\[0]，而是 **a\[0]** (因為 c 將高維陣列視為一維)
+- `a[]` 的型別為 `int (*) [NUM_COLS]`，也就是指向**陣列的 row** 
+- 用途：
+	1. 簡化高維陣列的 loop<br>E.g:
+		```c
+		for (p = &a[0]; p < &a[NUM_ROWS]; p ++)
+		  (*p)[i] = 0;
+		```
+		等價於
+		```c
+		for (p = a; p < a + NUM_ROWS; p++)
+		  (*p)[i] = 0;
+		```
+	2. 讓 function 用**一維陣列的形式來處理高維陣列**
+		- 這個方法可以使 function **重複利用**，因為如果要宣告 function 要用高維陣列作為引數的話需要將陣列中除了第一維的長度都寫出來，也就是說如果**其他陣列長度或維度不相同就不能用 prototype 的寫法**
+		- E.g:
+			```c
+			largest = find_largest(a, NUM_ROWS * NUM_COLS)
+			// WRONG
+			```
+			因為 a 的型別為 `int (*)[NUM_COLS]` ，但編譯器需要的是 `int *` (因為陣列是作為引數被傳送過去的)，所以需要寫成
+			```c
+			largest = find_largest(a[0], NUM_ROWS * NUM_COLS)
+			```
+			`a[0]` 為指向在 row 0 中的元素 0 ，而且型別為 `int *`，接著在 function 內只需要用元素 0 的位置就可以由記憶體的連續性得出全部陣列的位置
+<br><br>
+
+## VI. Pointers and Variable-Length Arrays (C99)
+
+- VLA 也理所當然的與 pointer 有關<br>E.g:
+	```c
+	void f(int n)
+	{
+	  int a[n], *p;
+	  p = a;
+	  ...
+	}
+	```
+- 當 VLA 高於一維時，指標必須要包含**除了第一維以外的其他維度**<br>E.g:
+	```c
+	void f(int m, int n)
+	{
+	  int a[m][n], (*p)[n];
+	  p = a;
+	  ...
+	}
+	```
+	- 因為 p 的型別是依賴不為常數的 n ，所以被稱作 **variably modified type**
+- **注意**：陣列長度的錯誤不一定會被編譯器給抓出來<br>E.g:
+	```c
+	int a[m][n], (*p)[m];
+	p = a;
+	// 雖然編譯器不會報錯，但只有在 
+	// m = n 的時候才會跑出正確的結果
+	// 其他都是 undefined behavior
+	```
+- Variably modified type 的限制
+	- 一定要**在 function 中或 prototype 被宣告**
+- Pointer arithmetic 在 VLA 的運作與一般的陣列相同<br>E.g:
+	```c
+	int a[m][n], (*p)[n];
+	
+	for (p = a; p < a + m; p++)
+	  (*p)[i] = 0;
+	```
+<br><Br>
+
+---
+# Exercise
+
+## I. Pointer arithemetic
+
+#### EX.1
+
+- 我的答案：
+	1. (a) 14
+	2. (b) 34
+	3. (c) 4
+	4. (d) true
+	5. (e) false
+#### **EX.2**
+
+- 我的答案：
+	- 因為指標不能夠被除以及**相加**
+- **修正**
+	```c
+	middle = (high - low) / 2 + low
+	```
+	- (high - low) 為整數，所以可以被除以 2
+<br>
+
+## II. Using an array name as a pointer for array processing
+
+#### EX.3
+
+- 我的答案：
+	1. 第一輪迴圈
+		- 1 儲存進 temp
+		- 因為 \*p++ 等價於 \*(p++)，所以 a\[0] 會先被設定為 10，接著 p 再指向 a\[1]
+		- 因為 \*q-- 等價於 \*(q--)，所以 a\[9] 會先被設定為 1，接著 q 再指向為 a\[8]-
+		- 由此得知每一輪迴圈會將第 i 個元素與第 N+1-i 個元素對調，也就是陣列的元素會前後對調
+	- 最終結果為 a\[N] 的元素依序為 {10, 9, 8, 7, 6, 5, 4, 3, 2, 1}
+
+#### EX.4
+
+- 我的答案：
+```c
+#include <stdbool.h>
+#define STACK_SIZE 100
+
+// external variables
+int contents[STACK_SIZE];
+int *top_ptr = contents;
+
+void make_empty(void)
+{
+top_ptr = contents;
+} 
+
+bool is_empty(void)
+{
+return top_ptr == contents;
+} 
+
+bool is_full(void)
+{
+return top_ptr == contents + STACK_SIZE;
+}
+```
+<br>
+
+## III. Using an array name as a pointer
+
+#### **EX.5**
+
+- 我的答案：
+	1. **(a)** 因為 p 為 pointer 而 a\[0] 為數值，所以**型別不合，無法比較**
+		- 而 (d) 則是用 **p\[i] = \*(p + i)** 
+	2. (b) 因為因為 `p == &a[0]` 等價於 `p == a` ，且已經用了 `p = a`，所以必然為真 
+
+#### **EX.6**
+
+- 我的答案：
+	```c
+	int sum_array(const int a[], int n)
+	{
+	  int sum;
+	  
+	  sum = 0;
+	  for (const int *p = a; p < a + n; p++)
+	    sum += *p;
+	  return sum;
+	}
+	```
+- 因為在參數上對 a\[] 用了 `const`，所以必須要在指標的型別前加上 `const`，以確保**指標不會修改陣列的值**，否則編譯器會跳出警告
+- 雖然用了 `const`，可是因為是用 `const int *p` 所以可以改變 \*p 的指向，只是不能夠改變值
+- 如果用的是 `int * const p` 那就不可以改變指向了
+
+
+#### EX.7
+
+- 我的答案：
+	```c
+	bool search(const int a[], int n, int key)
+	{
+	  for (const int *p = a; p < a + n; p++)
+	    if (*p == key)
+	      return true;
+	  return false;
+	}
+	```
+
+#### EX.8
+
+- 我的答案
+	```c
+	void store_zeros(int a[], int n)
+	{
+	  for (int *p = a; p < a + n; p++)
+	    *p = 0;
+	}
+	```
+
+#### EX.9
+
+- 我的答案
+```c
+double inner_product(const double *a, const double *b, 
+                     int n)
+{
+  const double *p, *q; 
+  double product_sum = 0;
+  
+  for (p = a, q = b; p < a + n; p++, q++)
+    product_sum += ((*p) * (*q));
+    
+  return product_sum;
+}
+```
