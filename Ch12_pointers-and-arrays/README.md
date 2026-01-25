@@ -548,6 +548,7 @@ return top_ptr == contents + STACK_SIZE;
 	    *p = 0;
 	}
 	```
+<br>
 
 #### EX.9
 
@@ -565,3 +566,478 @@ double inner_product(const double *a, const double *b,
   return product_sum;
 }
 ```
+
+#### EX.10
+
+- 我的答案
+```c
+int *find_middle(int a[], int n) {
+  return a + n/2;
+}
+```
+<br>
+
+#### EX.11
+
+- 我的答案
+```c
+int find_largest(int a[], int n) {
+  int *p, max;
+  
+  max = *a;
+  for (p = a + 1; p < a + n; p++)
+    if (*p > max)
+      max = *p;
+  return max;
+}
+```
+<br>
+
+#### EX.12
+
+- 我的答案
+```c
+void find_two_largest(const int *a, int n, int *largest,
+                      int *second_largest)
+{
+  const int *p = a;
+  
+  if (*p > p[1]) {
+    *largest = *p;
+    *second_largest = p[1];
+  } else {
+    *largest = p[1];
+    *second_largest = *p;
+  }
+  
+  for (p = a + 2; p < a + n; p++) {
+    if (*p > *largest) {
+      *second_largest = *largest;
+      *largest = *p;
+    }
+    else if (*p > *second_largest)
+      *second_largest = *p;
+  }
+}
+```
+<br>
+
+#### **EX.13**
+
+- 我的答案
+```c
+#define N 10
+
+double ident[N][N], *p;
+int i;
+
+for (i = 0, p = ident[0]; p < &ident[N][N]; p++, i++) {
+  if (i == 0)
+    *p = 1;
+  else if (i > N) {
+    *p = 1;
+    i = 0;
+  } else
+    *p = 0;
+}
+```
+- 錯誤點：
+	1. 因為陣列是從 0 開始的，所以最後一個是 ident\[N-1]\[N-1]
+	2. 記得只要宣告為小數，數字就也要填小數
+	3. 可以在一開始的時候就將計數器設為 N ，這樣就可以省去一行了
+- 修正後的答案：
+```c
+#define N 10
+
+double ident[N][N], *p;
+int non_zero;
+
+for (p = ident[0], non_zero = N; p < ident[0] + N * N; p++, non_zero++) {
+  if (i > N) {
+    *p = 1;
+    non_zero = 0;
+  } else
+    *p = 0;
+}
+```
+<br>
+
+#### **EX.14**
+
+- 我的答案：
+```c
+search(temperatures[], 7 * 24, 32);
+```
+- 錯誤點：
+	1. 因為函式要求的是 int \* ，所以要必須要給它一個指向整數的指標，所以必須要用
+		```c
+		temperatures[0]
+		```
+- 修正後
+```c
+search(temperatures[0], 7 * 24, 32);
+```
+<br>
+
+#### **EX.15**
+
+- 我的答案
+```c
+for (int *p = temperatures[i]; p < temperatures[i] + 24; p++)
+  printf("%d ", *p);
+```
+- 重點：
+	- temperatures\[i]  指的就是 row i 中的第 0 個元素
+<br>
+
+#### **EX.16**
+
+- 我的答案
+```c
+int *day_temp;
+
+for (day_temp = temperatures; day_temp < temperatures +  7; day_temp++) {
+  printf("%d ", find_largest(day_temp[0], 24));
+}
+```
+- 錯誤點
+	- 如果要指向陣列的行的話，記得要**宣告指標為陣列**
+
+- 修正後
+```c
+int (*day_temp)[24];
+
+for (day_temp = temperatures; day_temp < temperatures +  7; day_temp++) {
+  printf("%d ", find_largest(day_temp[0], 24));
+}
+```
+<br>
+
+#### **EX.17**
+
+- 我的答案
+```c
+int sum_two_dimensional_array(const int a[][LEN], int n)
+{
+  int sum = 0, *p;
+  
+  for (p = a[0]; p < a[0] + n * LEN; p++) {
+    sum += *p;
+  }
+}
+```
+
+- 錯誤
+	1. a 陣列有 `const`，記得要保留 `const`
+	2. 忘記回傳 sum
+	3. 因為不能用 \[]，所以必須要用 p\[i] = \*(p + i) 的公式將 a\[0] 換成 \*a
+- 修正後
+```c
+int sum_two_dimensional_array(const int a[][LEN], int n)
+{
+  int sum = 0;
+  const int *p;
+  
+  for (p = *a; p < *a + n * LEN; p++) {
+    sum += *p;
+  }
+
+  return sum;
+}
+```
+<br>
+
+#### EX.18
+
+- 我的答案
+```c
+int evaluate_position(char board[8][8]) {
+
+  int black_sum = 0, white_sum = 0; 
+  char *p;
+  
+  for (p = *board; p < *board + 8 * 8; p++)
+    switch (*p) {
+      case 'q':
+        black_sum += 9;
+        break;
+      case 'r':
+        black_sum += 5;
+        break;
+      case 'b':  case 'n':
+        black_sum += 3;
+        break;
+      case 'p':
+        black_sum += 1;
+        break;
+      case 'Q':
+        white_sum += 9;
+        break;
+      case 'R':
+        white_sum += 5;
+        break;
+      case 'B':  case 'N':
+        white_sum += 3;
+        break;
+      case 'P':
+        white_sum += 1;
+        break;
+    }
+
+  return white_sum - black_sum;
+}
+```
+<BR><br>
+
+---
+# Programming Projects
+
+## Proj.1: 訊息反轉
+
+#### (a) 用變數來指向陣列
+
+>[!success]- program
+>```c
+> // This is my program for programming project 1 in
+> // C Programming: a modern approach
+> // This program is used to reverce a message
+> 
+> #include <stdio.h>
+> 
+> #define MAX_CHAR 100
+> 
+> int main(void) {
+>   char ch, message[MAX_CHAR];
+>   int num_word = 0;
+> 
+>   printf("Enter a message: ");
+> 
+>   while ((ch = getchar()) != '\n') {
+>     message[num_word] = ch;
+>     num_word++;
+>   }
+> 
+>   printf("Reversal is: ");
+>   while (num_word >= 0) {
+>     printf("%c", message[num_word]);
+>     num_word--;
+>   }
+>   printf("\n");
+> 
+>   return 0;
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./programming-project_Ch12_a 
+>Enter a message: Don't get mad, get even
+>Reversal is: neve teg ,dam teg t'noD
+>```
+
+#### (b) 用指標來指向陣列
+
+>[!success]- program
+>```c
+> // This is my program for programming project 1 in
+> // C Programming: a modern approach
+> // This program is used to reverce a message
+> 
+> #include <stdio.h>
+> 
+> #define MAX_CHAR 100
+> 
+> int main(void) {
+>   char ch, message[MAX_CHAR], *num_word = message;
+> 
+>   printf("Enter a message: ");
+> 
+>   while ((ch = getchar()) != '\n') {
+>     *num_word = ch;
+>     num_word++;
+>   }
+> 
+>   printf("Reversal is: ");
+>   while (num_word >= message) {
+>     printf("%c", *num_word);
+>     num_word--;
+>   }
+>   printf("\n");
+> 
+>   return 0;
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./programming-project_Ch12_1b 
+>Enter a message: Don't get mad, get even.
+>Reversal is: .neve teg ,dam teg t'noD
+>```
+
+<br>
+
+#### Proj.2: 判斷是否為 palindrome
+
+#### (a) 用變數來指向陣列
+
+>[!success]- program
+>```c
+> // This is my program for programming project 2 (a)
+> // in C Programming: a modern approach
+> // This program is used to checks whether it's a palindrome
+> 
+> #include <ctype.h>
+> #include <stdbool.h>
+> #include <stdio.h>
+> 
+> #define MAX_NUM 100
+> 
+> // external variable
+> char message[MAX_NUM];
+> int num_word = 0;
+> 
+> // prototype
+> void read_message(void);
+> bool check_palin(void);
+> 
+> int main(void) {
+>   printf("Enter a message: ");
+>   read_message();
+> 
+>   if (check_palin())
+>     printf("Palindrome\n");
+>   else
+>     printf("Not a palindrome\n");
+> 
+>   return 0;
+> }
+> 
+> void read_message(void) {
+>   char ch;
+> 
+>   while ((ch = getchar()) != '\n') {
+>     message[num_word] = toupper(ch);
+>     num_word++;
+>   }
+> }
+> 
+> bool check_palin(void) {
+>   int initial_num_word = 0;
+> 
+>   while (initial_num_word < num_word) {
+>     // 檢查是否是字母
+>     if (message[num_word] > 'Z' || message[num_word] < 'A') {
+>       num_word--;
+>       continue;
+>     }
+>     if (message[initial_num_word] > 'Z' || message[initial_num_word] < 'A') {
+>       initial_num_word++;
+>       continue;
+>     }
+> 
+>     // 檢查是否為 palindrome
+>     if (message[initial_num_word] == message[num_word]) {
+>       initial_num_word++;
+>       num_word--;
+>       continue;
+>     } else {
+>       return false;
+>     }
+>   }
+>   return true;
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./programming-project_Ch12_2a 
+>Enter a message: He lived as a devil, eh?
+>Palindrome
+>
+>$ ./programming-project_Ch12_2a 
+>Enter a message: Madam, I am Adam.
+>Not a palindrome
+>```
+
+#### (b) 用指標來指向陣列
+
+>[!success]- program
+>```c
+> // This is my program for programming project 2 (a)
+> // in C Programming: a modern approach
+> // This program is used to checks whether it's a palindrome
+> 
+> #include <ctype.h>
+> #include <stdbool.h>
+> #include <stdio.h>
+> 
+> #define MAX_NUM 100
+> 
+> // external variable
+> char message[MAX_NUM];
+> char* num_word = message;
+> 
+> // prototype
+> void read_message(void);
+> bool check_palin(void);
+> 
+> int main(void) {
+>   printf("Enter a message: ");
+>   read_message();
+> 
+>   if (check_palin())
+>     printf("Palindrome\n");
+>   else
+>     printf("Not a palindrome\n");
+> 
+>   return 0;
+> }
+> 
+> void read_message(void) {
+>   char ch;
+> 
+>   while ((ch = getchar()) != '\n') {
+>     *num_word = toupper(ch);
+>     num_word++;
+>   }
+> }
+> 
+> bool check_palin(void) {
+>   char* initial_num_word = message;
+> 
+>   while (initial_num_word < num_word) {
+>     // 檢查是否是字母
+>     if (*num_word > 'Z' || *num_word < 'A') {
+>       num_word--;
+>       continue;
+>     }
+>     if (*initial_num_word > 'Z' || *initial_num_word < 'A') {
+>       initial_num_word++;
+>       continue;
+>     }
+> 
+>     // 檢查是否為 palindrome
+>     if (*initial_num_word == *num_word) {
+>       initial_num_word++;
+>       num_word--;
+>       continue;
+>     } else {
+>       return false;
+>     }
+>   }
+>   return true;
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./programming-project_Ch12_2b 
+>Enter a message: He lived as a devil, eh?
+>Palindrome
+>
+>$ ./programming-project_Ch12_2b 
+>Enter a message: Madam, I am Adam.
+>Not a palindrome
+>```
+
