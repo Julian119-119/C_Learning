@@ -1,4 +1,4 @@
-# Note
+# C program: a modern approach Ch.13 note
 
 ## I. String Literals
 
@@ -50,7 +50,7 @@
 	- 在運用 string literals 時，他是作為**指標來運作**的
 	- 他的型別為 `char *` (\* 代表的是**指標**，不是值)
 	- 以 `printf("abc");` 為例
-		1. C 會先以陣列的形式來儲存 abc<br>示意圖如下<br>![](./Ch13_Attachment/c-programming_a-modern-approach_ch13_1.png)
+		1. C 會先以陣列的形式來儲存 abc<br>示意圖如下<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_1.png)
 		2. 接著以 "abc" 呼叫出來 (用指標的概念去想)
 <br>
 
@@ -118,7 +118,7 @@ char digit_to_hex_char(int digit)
 	```c
 	char date1[8] = "June 14";
 	```
-	記憶體中的示意圖<br>![](./Ch13_Attachment/c-programming_a-modern-approach_ch13_2.png)
+	記憶體中的示意圖<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_2.png)
 - 雖然以上的例子為 string variable，但 c 其實是將其視為陣列初始化的縮寫，也就是等價於
 	```c
 	char date1[8] = {'J', 'u', 'n', 'e', ' ', '1', '4', '\0'};
@@ -127,12 +127,12 @@ char digit_to_hex_char(int digit)
 	```c
 	char date2[9] = "June 14";
 	```
-	示意圖：![](./Ch13_Attachment/c-programming_a-modern-approach_ch13_3.png)
+	示意圖：![](./Ch13_attachment/c-programming_a-modern-approach_ch13_3.png)
 - 如果格子數太少的話， **null character 會被丟棄，導致不能被作為 string variable 來使用**<br>E.g:
 	```c
 	char date3[7] = "June 14";
 	```
-	示意圖<br>![](./Ch13_Attachment/c-programming_a-modern-approach_ch13_4.png)
+	示意圖<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_4.png)
 - 如果陣列沒有指定長度，則編譯器會自動算出 string literal + null character 的長度，讓它可以**剛好放下去** (**長度之後不可被變動**)<Br>E.g:
 	```c
 	char date4[] = "June 14";
