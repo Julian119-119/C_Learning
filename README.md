@@ -32,7 +32,7 @@
 | **09**  | Functions                               |   ✅    |          [view](./Ch9_function)          |
 | **10**  | Program Organization                    |   ✅    |   [view](./Ch10_program-organization)    |
 | **11**  | Pointers                                |   ✅    |                [view](./)                |
-| **12**  | Pointers and Arrays                     |   🔄   |    [view](./Ch12_pointers-and-arrays)    |
+| **12**  | Pointers and Arrays                     |   ✅    |    [view](./Ch12_pointers-and-arrays)    |
 | **13**  | Strings                                 |   ⬜    |                                          |
 | **14**  | The Preprocessor                        |   ⬜    |                                          |
 | **15**  | Writing Large Programs                  |   ⬜    |                                          |

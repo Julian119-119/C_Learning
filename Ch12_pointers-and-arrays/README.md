@@ -3,10 +3,15 @@
 ## Program overview
 
 
-| 題號  | 功能             | 觀念                  | 連結                   |
-| --- | -------------- | ------------------- | -------------------- |
-| 範例一 | 將數字照輸入的順序倒著印回去 | 將陣列的指標用於 for loop 中 | [view](./reverse2.c) |
-<br><Br>
+| 題號      | 功能               | 觀念                                   | 連結                                      |
+| ------- | ---------------- | ------------------------------------ | --------------------------------------- |
+| 範例一     | 將數字照輸入的順序倒著印回去   | 將陣列的指標用於 for loop 中                  | [view](./reverse2.c)                    |
+| Proj.1a | 訊息反轉             | 用一般變數寫讀取字元，並寫入陣列中                    | [view](./programming-project_Ch12_1a.c) |
+| Proj.1b | 訊息反轉             | 用指標來改寫上面的 program                    | [view](./programming-project_Ch12_1b.c) |
+| Proj.2a | 判斷是否為 palindrome | 讀取字元，利用字元碼忽略非字母的字元，並判斷是否為 palindrome | [view](programming-project_Ch12_2a.c)   |
+| Proj.2b | 判斷是否為 palindrome | 用指標改寫上面的 program                     | [view](./programming-project_Ch12_2b.c) |
+| Proj.7  | 找尋最大最小值          | 將 Ch11.4 中的 max_min.c 修改為指標的寫法       | [view](./programming-project_Ch12_7.c)  |
+<br><br>
 
 ---
 ## Note
@@ -434,9 +439,9 @@
 <br><Br>
 
 ---
-# Exercise
+## Exercise
 
-## I. Pointer arithemetic
+### I. Pointer arithemetic
 
 #### EX.1
 
@@ -457,7 +462,7 @@
 	- (high - low) 為整數，所以可以被除以 2
 <br>
 
-## II. Using an array name as a pointer for array processing
+### II. Using an array name as a pointer for array processing
 
 #### EX.3
 
@@ -497,7 +502,7 @@ return top_ptr == contents + STACK_SIZE;
 ```
 <br>
 
-## III. Using an array name as a pointer
+### III. Using an array name as a pointer
 
 #### **EX.5**
 
@@ -790,9 +795,9 @@ int evaluate_position(char board[8][8]) {
 <BR><br>
 
 ---
-# Programming Projects
+## Programming Projects
 
-## Proj.1: 訊息反轉
+### Proj.1: 訊息反轉
 
 #### (a) 用變數來指向陣列
 
@@ -877,7 +882,7 @@ int evaluate_position(char board[8][8]) {
 
 <br>
 
-#### Proj.2: 判斷是否為 palindrome
+### Proj.2: 判斷是否為 palindrome
 
 #### (a) 用變數來指向陣列
 
@@ -1039,5 +1044,57 @@ int evaluate_position(char board[8][8]) {
 >$ ./programming-project_Ch12_2b 
 >Enter a message: Madam, I am Adam.
 >Not a palindrome
+>```
+<br>
+
+### Proj.7: 修改 max_min.c
+
+>[!success]- program
+>```c
+> // Finds the largest and smallest elements in an array
+> 
+> #include <stdio.h>
+> 
+> #define N 10
+> 
+> // prototype
+> void max_min(int a[], int n, int *max, int *min);
+> 
+> int main(void) {
+>   int b[N], big, small;
+> 
+>   printf("Enter 10 nubers: ");
+>   for (int *p = b; p < b + N; p++) {
+>     scanf("%d", p);
+>   }
+> 
+>   max_min(b, N, &big, &small);
+> 
+>   printf("Largest: %d\n", big);
+>   printf("Smallest: %d\n", small);
+> 
+>   return 0;
+> }
+> 
+> void max_min(int a[], int n, int *max, int *min) {
+>   *max = *a;
+>   *min = *a;
+> 
+>   for (int *p = a + 1; p < a + n; p++) {
+>     if (*p > *max) {
+>       *max = *p;
+>     }
+>     if (*p < *min) {
+>       *min = *p;
+>     }
+>   }
+> }
+>```
+
+>[!success]- output
+>```c
+>Enter 10 nubers: 1 123 456 789 132 465 97 45 22 33
+>Largest: 789
+>Smallest: 1
 >```
 
