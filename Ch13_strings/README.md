@@ -1,5 +1,12 @@
 # C program: a modern approach Ch.13 note
 
+## Program overview
+
+
+| 題號  | 功能                 | 觀念                      | 連結                 |
+| --- | ------------------ | ----------------------- | ------------------ |
+| 範例一 | 輸入一個月內的事情，並依日期排序輸出 | string.h 中關於 string 的操作 | [view](./remind.c) |
+
 ## I. String Literals
 
 #### 一，Intro
@@ -372,3 +379,372 @@ char digit_to_hex_char(int digit)
 		str1[sizeof(str1 - 1)] = '\0'
 		```
 		這樣最後一格就確保會是 null character
+<Br>
+
+#### 三，The `strlen` (String Length) Function
+
+- prototype
+	```c
+	size_t strlen(const char *s);
+	```
+	- `size_t` 為  `typedef` 名字，代表 **unsigned integer types**
+- `strlen` 會**回傳字串 s 的長度** (從開頭到 null character，但不包含到 null character)，**不是陣列的長度**
+- E.g:
+	```c
+	int len;
+	
+	len = strlen("abc");  // len is now 3
+	len = strlen("");     // len is now 0
+	strcpy(str1, "abc");
+	len = strlen(str1);   // len is now 3
+	```
+<br>
+
+#### 四，The `strcat` (String Concatenation) Function
+
+1. strcat
+	- prototype
+		```c
+		char *strcat(char *s1, const char *s2);
+		```
+	- `strcat` 會將**字串 s2 複製進字串 s1 的後面**
+	- **回傳 s1** (也就是結果字串的指標)
+	- E.g:
+		1. 不使用回傳值
+			```c
+			strcpy(str1, "abc");
+			strcat(str1, "def");    // str1 now contains "abcdef"
+			strcpy(str1, "abc");
+			strcpy(str2, "def");
+			strcat(str1, str2);    // str1 now contains "abcdef"
+			```
+		2. 使用回傳值
+			```c
+			strcpy(str1, "abc");
+			strcpy(str2, "def");
+			strcat(str1, strcat(str2, "ghi"));
+			  // str1 now contains "abcdefghi";
+			  // str2 contains "defghi"
+			```
+	- 注意：**如果 str1 的大小不夠將字串 str2 放入，會產生 undefined behavior**
+2. strncat
+	- 與 strncpy 一樣，都是**較為安全的版本**
+	- 有**三個引數**
+	- E.g:
+		```c
+		strncat(str1, str2, sizeof(str1) - strlen(str1) - 1);
+		```
+		- *注，最後一個的用意引數為：總空間 sizeof(str1) 減去已用去的時間 strlen(str1) 最後再減掉 null character 所需的空間*
+<br>
+
+#### 五，The `strcmp` (String Comparison) Function
+
+- prototype
+	```c
+	int stcmp(const char *s1, const char *s2);
+	```
+- 回傳值
+	- s1 **<** s2: 回傳值**小於 0**
+	- s1 **\==** s2: 回傳值**等於 0**
+	- s1 **>** s2: 回傳值**大於 0**
+- E.g:
+	1. 
+		```c
+		if (strcmp(str1, str2) < 0)
+		// 如果 str1 小於 str2
+		  ...
+		```
+	2. 
+		```c
+		if (strcmp(str1, str2) <= 0)
+		// 如果 str1 小於或等於 str2
+		  ...
+		```
+- 比較大小的邏輯
+	- 依據 lexicographic ordering (字典序) 來比較大小
+	- 由左置右來比大小<br>E.g:
+		1. "abc" 與 "bcd"
+			- 因為 a 比 b 小，所以 "abc" 比 "bcd" 還小，其他的根本不會被比較
+		2. "abd" 與 "abe"
+			- 理由同上，因為 d 比 e 小 (前兩個相等)，所以 "abd" 比 "abe" 小
+	- 長度較小的就比較小<br>E.g:
+		- "abc" 與 "abcd"
+			- 因為前兩項相等，且 "abc" 比較短，所以 "abc" 小於 "abcd" (可以想成已經遇到 null character，所以後面的字母必定比較大)
+	- 依據 ASCII 的編碼比較
+		- 由大到小編碼順序為 **A-Z, a-z, 0-9**
+<br>
+
+#### 六，範例一：Printing a One-Month Reminder List
+
+###### 第一版：讀取一行的字串
+
+>[!success]- program
+>```c
+> // Prints a one-month reminder list
+> 
+> #include <stdio.h>
+> #include <string.h>
+> 
+> #define MAX_WORD 50
+> #define MAX_DAY 15
+> 
+> // prototype
+> void read_line(char str[], int n);
+> 
+> int main(void) {
+>   char str[MAX_DAY][MAX_WORD], temp_str[MAX_WORD];
+> 
+>   printf("Enter day and reminder: ");
+>   read_line(temp_str, MAX_WORD);
+> 
+>   printf("%s\n", temp_str);
+> }
+> 
+> void read_line(char str[], int n) {
+>   int ch;
+>   char* p;
+> 
+>   for (p = str; (ch = getchar()) != '\n'; p++)
+>     if (p < str + n - 1)
+>       *p = ch;
+>     else
+>       break;
+>   p[1] = '\0';
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./remind 
+>Enter day and reminder: 24 Susan's birthday
+>24 Susan's birthday
+>```
+
+###### 第二版：讀取多行的字串，並排列順序
+
+- 問題點：
+	1. 如果要儲存陣列的 row 的指標的話，要宣告一維陣列的指標
+	2. 一維陣列的指標要記得加上 ()
+	3. \* 的意思是回到宣告的東西上，也就是說如果在宣告時用的就是陣列名，加上 \* 並不是變成值，而是變為陣列的名稱 (也就是**前面所宣告的陣列中第一個元素的位址**)
+
+>[!bug]- program
+>```c
+> // Prints a one-month reminder list
+> 
+> #include <stdio.h>
+> #include <string.h>
+> 
+> #define MAX_WORD 50
+> #define MAX_DAY 15
+> 
+> // prototype
+> int read_line(void);
+> void store_str(char* last_reminder_row);
+> void print_str(char* last_reminder_row);
+> 
+> // external variable
+> char str[MAX_DAY][MAX_WORD], temp_str[MAX_WORD];
+> 
+> int main(void) {
+>   char* last_reminder_row = str;
+> 
+>   for (;;) {
+>     printf("Enter day and reminder: ");
+>     if (!read_line()) {
+>       break;
+>     }
+>     last_reminder_row++;
+>     store_str(last_reminder_row);
+>   }
+> 
+>   print_str(last_reminder_row);
+> 
+>   return 0;
+> }
+> 
+> int read_line(void) {
+>   int ch;
+>   char* p;
+> 
+>   // 檢查第一個字元是否為 0
+>   if ((ch = getchar()) == '0') {
+>     return 1;
+>   } else {
+>     str[0] = ch;
+>   }
+> 
+>   // 輸入第二個以後的字元
+>   for (p = str + 1; (ch = getchar()) != '\n'; p++)
+>     if (p < str + MAX_WORD - 1)
+>       *p = ch;
+>     else
+>       break;
+>   p[1] = '\0';
+> 
+>   return 0;
+> }
+> 
+> void store_str(char* last_reminder_row) {
+>   char *row_position = str, *move_row;
+> 
+>   // 找出 temp_str 所適合的位置
+>   while (strcmp(temp_str, row_position) < 0) {
+>     row_position++;
+>   }
+> 
+>   // 從最後的 reminder (也就是 row) 開始移動
+>   // 空出空間給新的字串
+>   for (move_row = last_reminder_row; row_position <= move_row; move_row--) {
+>     strcpy(move_row + 1, move_row);
+>   }
+> 
+>   // 新的字串放入正確的位子中
+>   strcpy(row_position, temp_str);
+> }
+> 
+> void print_str(char* last_reminder_row) {
+>   for (char* p = str; p <= last_reminder_row; p++) {
+>     printf("%s", *p);
+>   }
+> }
+>```
+
+>[!failure]- 編譯器的報錯
+>```
+>$ gcc -o remind remind.c 
+>remind.c: In function ‘main’:
+>remind.c:18:29: warning: initialization of ‘char *’ from incompatible pointer type ‘char (*)[50]’ [-Wincompatible-pointer-types]
+>   18 |   char* last_reminder_row = str;
+>      |                             ^~~
+>remind.c: In function ‘read_line’:
+>remind.c:42:12: error: assignment to expression with array type
+>   42 |     str[0] = ch;
+>      |            ^
+>remind.c:46:10: warning: assignment to ‘char *’ from incompatible pointer type ‘char (*)[50]’ [-Wincompatible-pointer-types]
+>   46 |   for (p = str + 1; (ch = getchar()) != '\n'; p++)
+>      |          ^
+>remind.c:47:11: warning: comparison of distinct pointer types lacks a cast
+>   47 |     if (p < str + MAX_WORD - 1)
+>      |           ^
+>remind.c: In function ‘store_str’:
+>remind.c:57:24: warning: initialization of ‘char *’ from incompatible pointer type ‘char (*)[50]’ [-Wincompatible-pointer-types]
+>   57 |   char *row_position = str, *move_row;
+>      |                        ^~~
+>remind.c: In function ‘print_str’:
+>remind.c:75:18: warning: initialization of ‘char *’ from incompatible pointer type ‘char (*)[50]’ [-Wincompatible-pointer-types]
+>   75 |   for (char* p = str; p <= last_reminder_row; p++) {
+>      |                  ^~~
+>```
+
+- 問題點：
+	- 因為 `strcmp` 是以字典排序來比較大小的，所以會造成 12 比 5 小
+	- 因此必須要用 scanf 來強制讓它變成 05
+
+>[!bug]- 修改後的 program
+>```c
+> // Prints a one-month reminder list
+> 
+> #include <stdio.h>
+> #include <string.h>
+> 
+> #define MAX_WORD 50
+> #define MAX_DAY 15
+> 
+> // prototype
+> int read_line(void);
+> void store_str(char (*last_reminder_row)[MAX_WORD]);
+> void print_str(char (*last_reminder_row)[MAX_WORD]);
+> 
+> // external variable
+> char str[MAX_DAY][MAX_WORD], temp_str[MAX_WORD];
+> 
+> int main(void) {
+>   // 修正點：要存入一整個 row 的話，就必須要宣告一個
+>   // 一維陣列的指標
+>   char (*last_reminder_row)[MAX_WORD] = str;
+> 
+>   for (;;) {
+>     printf("Enter day and reminder: ");
+>     if (read_line() == 1) {
+>       break;
+>     }
+>     store_str(last_reminder_row);
+>     last_reminder_row++;
+>   }
+> 
+>   print_str(last_reminder_row);
+> 
+>   return 0;
+> }
+> 
+> int read_line(void) {
+>   int ch;
+>   char* p;
+> 
+>   // 檢查第一個字元是否為 0
+>   if ((ch = getchar()) == '0') {
+>     return 1;
+>   } else {
+>     temp_str[0] = ch;
+>   }
+> 
+>   // 輸入第二個以後的字元
+>   for (p = temp_str + 1; (ch = getchar()) != '\n'; p++)
+>     if (p < temp_str + MAX_WORD - 1)
+>       *p = ch;
+>     else
+>       break;
+>   *p = '\0';
+> 
+>   return 0;
+> }
+> 
+> void store_str(char (*last_reminder_row)[MAX_WORD]) {
+>   // 修正點：
+>   char (*row_position)[MAX_WORD] = str, (*move_row)[MAX_WORD];
+> 
+>   // 找出 temp_str 所適合的位置
+>   while (strcmp(temp_str, *row_position) < 0 &&
+>          row_position < last_reminder_row) {
+>     row_position++;
+>   }
+> 
+>   // 從最後的 reminder (也就是 row) 開始移動
+>   // 空出空間給新的字串
+>   for (move_row = last_reminder_row; row_position <= move_row; move_row--) {
+>     strcpy(move_row[1], *move_row);
+>   }
+> 
+>   // 新的字串放入正確的位子中
+>   // 修正點：因為之前指派 row_position 為 str
+>   // 所以當用上 * 的時候會變成 str (也就是陣列的位址)
+>   strcpy(*row_position, temp_str);
+> }
+> 
+> void print_str(char (*last_reminder_row)[MAX_WORD]) {
+>   printf("\n");
+>   for (char (*p)[MAX_WORD] = str; p <= last_reminder_row; p++) {
+>     printf("%s\n", *p);
+>   }
+> }
+>```
+
+>[!failure]- output
+>```
+>Enter day and reminder: 24 Susan's birthday
+>Enter day and reminder: 5 6:00 - Dinner with Marge and Russ
+>Enter day and reminder: 26 Movie - "Chinatown"
+>Enter day and reminder: 7 10:30 - Dental appointment
+>Enter day and reminder: 12 Movie - "Dazed and Confused"
+>Enter day and reminder: 5 Saturday class
+>Enter day and reminder: 12 Saturday class
+>Enter day and reminder: 0
+>
+>7 10:30 - Dental appointment
+>5 Saturday class
+>5 6:00 - Dinner with Marge and Russ
+>26 Movie - "Chinatown"
+>24 Susan's birthday
+>12 Saturday class
+>12 Movie - "Dazed and Confused"
+>```
