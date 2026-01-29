@@ -525,7 +525,7 @@ char digit_to_hex_char(int digit)
 - 問題點：
 	1. 如果要儲存陣列的 row 的指標的話，要宣告一維陣列的指標
 	2. 一維陣列的指標要記得加上 ()
-	3. \* 的意思是回到宣告的東西上，也就是說如果在宣告時用的就是陣列名，加上 \* 並不是變成值，而是變為陣列的名稱 (也就是**前面所宣告的陣列中第一個元素的位址**)
+	3. \* 的意思是指向的東西的實際值，因為在 assignment 時所用的就是陣列的名稱，所以解值時就會變成陣列的名稱 (也就是**前面所宣告的陣列中第一個元素的位址**)
 
 >[!bug]- program
 >```c
@@ -639,6 +639,8 @@ char digit_to_hex_char(int digit)
 - 問題點：
 	- 因為 `strcmp` 是以字典排序來比較大小的，所以會造成 12 比 5 小
 	- 因此必須要用 scanf 來強制讓它變成 05
+- 學習重點
+	- `sprintf` 用途：把格式化的資料（文字、數字）輸出到**記憶體中的字串陣列**
 
 >[!bug]- 修改後的 program
 >```c
@@ -748,3 +750,656 @@ char digit_to_hex_char(int digit)
 >12 Saturday class
 >12 Movie - "Dazed and Confused"
 >```
+
+>[!success]- 修正後的 program
+>```c
+> // Prints a one-month reminder list
+> 
+> #include <stdio.h>
+> #include <string.h>
+> 
+> #define MAX_WORD 50
+> #define MAX_DAY 15
+> 
+> // prototype
+> void read_line(char msg_str[MAX_WORD], int n);
+> void store_str(char day_str[MAX_WORD], char (*next_empty_row)[MAX_WORD]);
+> void print_str(char (*next_empty_row)[MAX_WORD]);
+> 
+> // external variable
+> char month_str[MAX_DAY][MAX_WORD];
+> 
+> int main(void) {
+>   // 修正點：要存入一整個 row 的話，就必須要宣告一個
+>   // 一維陣列的指標
+>   char (*next_empty_row)[MAX_WORD] = month_str;
+>   int day;
+>   char msg_str[MAX_WORD], day_str[MAX_WORD];;
+> 
+>   for (;;) {
+>     // 判斷是否有位子繼續輸入
+>     if (next_empty_row >= month_str + MAX_DAY) {
+>       printf("---no space left---");
+>       break;
+>     }
+> 
+>     printf("Enter day and reminder: ");
+>     // 讀取前面的數字並格式化
+>     scanf("%2d", &day);
+>     // 判斷是否為 0
+>     if (!day) break;
+>     // 讀取剩餘的字
+>     read_line(msg_str, MAX_WORD);
+>     // 黏合數字與文字並儲存在 day_str 之中
+>     sprintf(day_str, "%2d %s", day, msg_str);
+> 
+>     // 將 day_str 儲存進 month_str 之中
+>     store_str(day_str, next_empty_row);
+>     next_empty_row++;
+>   }
+> 
+>   print_str(next_empty_row);
+> 
+>   return 0;
+> }
+> 
+> void read_line(char msg_str[], int n) {
+>   int ch;
+>   char* p;
+> 
+>   // 清空前面的空白
+>   while ((ch = getchar()) == ' ');
+> 
+>   // 輸入第一個字元
+>   msg_str[0] = ch;
+> 
+>   // 輸入第二個以後的字元
+>   for (p = msg_str + 1; (ch = getchar()) != '\n'; p++)
+>     if (p < msg_str + n - 1)
+>       *p = ch;
+>     else
+>       break;
+>   *p = '\0';
+> }
+> 
+> void store_str(char day_str[], char (*next_empty_row)[MAX_WORD]){
+>   // 修正點：
+>   char (*row_position)[MAX_WORD] = month_str, (*move_row)[MAX_WORD];
+> 
+>   // 找出 temp_str 所適合的位置
+>   while (strcmp(day_str, *row_position) >= 0 &&
+>          row_position < next_empty_row) {
+>     row_position++;
+>   }
+> 
+>   // 從最後的 reminder (也就是 row) 開始移動
+>   // 空出空間給新的字串
+>   for (move_row = next_empty_row; row_position <= move_row; move_row--) {
+>     strcpy(*move_row, *(move_row - 1));
+>   }
+> 
+>   // 新的字串放入正確的位子中
+>   // 修正點：因為之前指派 row_position 為 str
+>   // 所以當用上 * 的時候會變成 str (也就是陣列的位址)
+>   strcpy(*row_position, day_str);
+> }
+> 
+> void print_str(char (*next_empty_row)[MAX_WORD]) {
+>   printf("\n");
+>   for (char (*p)[MAX_WORD] = month_str; p <= next_empty_row; p++) {
+>     printf("%s\n", *p);
+>   }
+> }
+>```
+
+>[!success]- output
+>```
+>Enter day and reminder: 24 Susan's birthday
+>Enter day and reminder: 5 6:00 - Dinner with Marge and Russ
+>Enter day and reminder: 26 Movie - "Chinatown"
+>Enter day and reminder: 7 10:30 - Dental appointment
+>Enter day and reminder: 12 Movie - "Dazed and Confused"
+>Enter day and reminder: 5 Saturday class
+>Enter day and reminder: 12 Saturday class
+>Enter day and reminder: 0
+>
+> 5 6:00 - Dinner with Marge and Russ
+> 5 Saturday class
+> 7 10:30 - Dental appointment
+>12 Movie - "Dazed and Confused"
+>12 Saturday class
+>24 Susan's birthday
+>26 Movie - "Chinatown"
+>```
+
+- 重構重點
+	1. 因為 month_st\[]\[] 只有少數的 function 需要用到，所以更適合用 local variable，而不是 external variable
+	2. 將格式化數字與合併剩餘的字放到另外一個 function 中，使 `main` 可以只負責控制整個程式
+
+>[!success]- 重構後的 program
+>```c
+> // Prints a one-month reminder list
+> 
+> #include <stdio.h>
+> #include <string.h>
+> 
+> #define MAX_WORD 50
+> #define MAX_DAY 15
+> 
+> int read_and_format_line(char day_str[MAX_WORD], char msg_str[MAX_WORD], int n);
+> void read_line(char msg_str[MAX_WORD], int n);
+> void store_str(char month_str[MAX_DAY][MAX_WORD], char day_str[MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]);
+> void print_str(char month_str[MAX_DAY][MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]);
+> 
+> int main(void) {
+>   // 修正點：要存入一整個 row 的話，就必須要宣告一個
+>   // 一維陣列的指標
+>   int day;
+>   char msg_str[MAX_WORD], day_str[MAX_WORD], month_str[MAX_DAY][MAX_WORD];
+>   char (*next_empty_row)[MAX_WORD] = month_str;
+> 
+>   for (;;) {
+>     // 判斷是否有位子繼續輸入
+>     if (next_empty_row >= month_str + MAX_DAY) {
+>       printf("---no space left---");
+>       break;
+>     }
+> 
+>     printf("Enter day and reminder: ");
+>     if (!read_and_format_line(day_str, msg_str, MAX_WORD)) {
+>       break;
+>     }
+> 
+>     // 將 day_str 儲存進 month_str 之中
+>     store_str(month_str, day_str, next_empty_row);
+>     next_empty_row++;
+>   }
+> 
+>   print_str(month_str, next_empty_row);
+> 
+>   return 0;
+> }
+> 
+> int read_and_format_line(char day_str[MAX_WORD], char msg_str[MAX_WORD],
+>                          int n) {
+>   int day;
+> 
+>   // 讀取前面的數字並格式化
+>   scanf("%2d", &day);
+>   // 判斷是否為 0
+>   if (!day) return 0;
+>   // 讀取剩餘的字
+>   read_line(msg_str, n);
+>   // 黏合數字與文字並儲存在 day_str 之中
+>   sprintf(day_str, "%2d %s", day, msg_str);
+> 
+>   return 1;
+> }
+> 
+> void read_line(char msg_str[], int n) {
+>   int ch;
+>   char* p;
+> 
+>   // 清空前面的空白
+>   while ((ch = getchar()) == ' ');
+> 
+>   // 輸入第一個字元
+>   msg_str[0] = ch;
+> 
+>   // 輸入第二個以後的字元
+>   for (p = msg_str + 1; (ch = getchar()) != '\n'; p++)
+>     if (p < msg_str + n - 1)
+>       *p = ch;
+>     else
+>       break;
+>   *p = '\0';
+> }
+> 
+> void store_str(char month_str[MAX_DAY][MAX_WORD], char day_str[MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]) {
+>   char (*row_position)[MAX_WORD] = month_str, (*move_row)[MAX_WORD];
+> 
+>   // 找出 day_str 所適合的位置
+>   while (strcmp(day_str, *row_position) >= 0 && row_position < next_empty_row) {
+>     row_position++;
+>   }
+> 
+>   // 從最後的 reminder (也就是 row) 開始移動
+>   // 空出空間給新的字串
+>   for (move_row = next_empty_row; row_position <= move_row; move_row--) {
+>     strcpy(*move_row, *(move_row - 1));
+>   }
+> 
+>   // 新的字串放入正確的位子中
+>   // 修正點：因為之前指派 row_position 為 str
+>   // 所以當用上 * 的時候會變成 str (也就是陣列的位址)
+>   strcpy(*row_position, day_str);
+> }
+> 
+> void print_str(char month_str[MAX_DAY][MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]) {
+>   printf("\n");
+>   for (char (*p)[MAX_WORD] = month_str; p <= next_empty_row; p++) {
+>     printf("%s\n", *p);
+>   }
+> }
+>```
+
+>[!success]- output
+>```
+>Enter day and reminder: 24 Susan's birthday
+>Enter day and reminder: 5 6:00 - Dinner with Marge and Russ
+>Enter day and reminder: 26 Movie - "Chinatown"
+>Enter day and reminder: 7 10:30 - Dental appointment
+>Enter day and reminder: 12 Movie - "Dazed and Confused"
+>Enter day and reminder: 5 Saturday class
+>Enter day and reminder: 12 Saturday class
+>Enter day and reminder: 0
+>
+> 5 6:00 - Dinner with Marge and Russ
+> 5 Saturday class
+> 7 10:30 - Dental appointment
+>12 Movie - "Dazed and Confused"
+>12 Saturday class
+>24 Susan's birthday
+>26 Movie - "Chinatown"
+>
+>```
+
+
+###### 最終版：列印出一整個月的記事並一日期排序
+
+- 新增的 statement
+	- 增加了輸出的第一行標題
+
+>[!success]- 最終的 program
+>```c
+> // Prints a one-month reminder list
+> 
+> #include <stdio.h>
+> #include <string.h>
+> 
+> #define MAX_WORD 50
+> #define MAX_DAY 15
+> 
+> int read_and_format_line(char day_str[MAX_WORD], char msg_str[MAX_WORD], int n);
+> void read_line(char msg_str[MAX_WORD], int n);
+> void store_str(char month_str[MAX_DAY][MAX_WORD], char day_str[MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]);
+> void print_str(char month_str[MAX_DAY][MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]);
+> 
+> int main(void) {
+>   // 修正點：要存入一整個 row 的話，就必須要宣告一個
+>   // 一維陣列的指標
+>   char msg_str[MAX_WORD], day_str[MAX_WORD], month_str[MAX_DAY][MAX_WORD];
+>   char (*next_empty_row)[MAX_WORD] = month_str;
+> 
+>   for (;;) {
+>     // 判斷是否有位子繼續輸入
+>     if (next_empty_row >= month_str + MAX_DAY) {
+>       printf("---no space left---");
+>       break;
+>     }
+> 
+>     printf("Enter day and reminder: ");
+>     if (!read_and_format_line(day_str, msg_str, MAX_WORD)) {
+>       break;
+>     }
+> 
+>     // 將 day_str 儲存進 month_str 之中
+>     store_str(month_str, day_str, next_empty_row);
+>     next_empty_row++;
+>   }
+> 
+>   print_str(month_str, next_empty_row);
+> 
+>   return 0;
+> }
+> 
+> int read_and_format_line(char day_str[MAX_WORD], char msg_str[MAX_WORD],
+>                          int n) {
+>   int day;
+> 
+>   // 讀取前面的數字並格式化
+>   scanf("%2d", &day);
+>   // 判斷是否為 0
+>   if (!day) return 0;
+>   // 讀取剩餘的字
+>   read_line(msg_str, n);
+>   // 黏合數字與文字並儲存在 day_str 之中
+>   sprintf(day_str, "%2d %s", day, msg_str);
+> 
+>   return 1;
+> }
+> 
+> void read_line(char msg_str[], int n) {
+>   int ch;
+>   char* p;
+> 
+>   // 清空前面的空白
+>   while ((ch = getchar()) == ' ');
+> 
+>   // 輸入第一個字元
+>   msg_str[0] = ch;
+> 
+>   // 輸入第二個以後的字元
+>   for (p = msg_str + 1; (ch = getchar()) != '\n'; p++)
+>     if (p < msg_str + n - 1)
+>       *p = ch;
+>     else
+>       break;
+>   *p = '\0';
+> }
+> 
+> void store_str(char month_str[MAX_DAY][MAX_WORD], char day_str[MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]) {
+>   char (*row_position)[MAX_WORD] = month_str, (*move_row)[MAX_WORD];
+> 
+>   // 找出 day_str 所適合的位置
+>   while (strcmp(day_str, *row_position) >= 0 && row_position < next_empty_row) {
+>     row_position++;
+>   }
+> 
+>   // 從最後的 reminder (也就是 row) 開始移動
+>   // 空出空間給新的字串
+>   for (move_row = next_empty_row; row_position < move_row; move_row--) {
+>     strcpy(*move_row, *(move_row - 1));
+>   }
+> 
+>   // 新的字串放入正確的位子中
+>   // 修正點：因為之前指派 row_position 為 str
+>   // 所以當用上 * 的時候會變成 str (也就是陣列的位址)
+>   strcpy(*row_position, day_str);
+> }
+> 
+> void print_str(char month_str[MAX_DAY][MAX_WORD],
+>                char (*next_empty_row)[MAX_WORD]) {
+>   printf("\n");
+>   printf("Day Reminder\n");
+>   for (char (*p)[MAX_WORD] = month_str; p < next_empty_row; p++) {
+>     printf(" %s\n", *p);
+>   }
+> }
+>```
+
+>[!success]- 最終的 output
+>```
+>Enter day and reminder: 24 Susan's birthday
+>Enter day and reminder: 5 6:00 - Dinner with Marge and Russ
+>Enter day and reminder: 26 Movie - "Chinatown"
+>Enter day and reminder: 7 10:30 - Dental appointment
+>Enter day and reminder: 12 Movie - "Dazed and Confused"
+>Enter day and reminder: 5 Saturday class
+>Enter day and reminder: 12 Saturday class
+>Enter day and reminder: 0
+>
+>Day Reminder
+>  5 6:00 - Dinner with Marge and Russ
+>  5 Saturday class
+>  7 10:30 - Dental appointment
+> 12 Movie - "Dazed and Confused"
+> 12 Saturday class
+> 24 Susan's birthday
+> 26 Movie - "Chinatown"
+>```
+
+<br><br>
+
+## IV. String Idioms
+
+#### 一，Searching for the End of a String
+
+- 找尋字串的結尾<br>E.g:
+	1. 最簡易的版本<br>重點：**字串的結尾一定是 null character**，所以可以用這個來**定位**
+		```c
+		size_t strlen(const char *s) 
+		{
+		  size_t n;
+		  
+		  for (n = 0; *s != '\0'; s++)
+		    n++
+		  return n;
+		}
+		```
+	2. 濃縮版<br>重點：因為 '\\0' 的 ASCII 代號就是 **0 (false)**，所以可以直接用來判斷 (**其他的皆為非零**，也就是 ture)
+		```c
+		size_t strlen(const char *s)
+		{
+		  size_t n = 0;
+		  
+		  for (; *s; s++)
+		    n++
+		  return n;
+		}
+		```
+	3. 再濃縮<br>重點：利用 **postfix 的 increment** 來化簡
+		```c
+		size_t strlen(const char *s)
+		{
+		  size_t n = 0;
+		  
+		  while (*s++)
+		    n++
+		  return n;
+		}
+		```
+	4. 加快運作的版本<br>重點：利用指標直接**省略變數**
+		```c
+		size_t strlen(const char *s)
+		{
+		  const char *p = s;
+		  
+		  while (*s)
+		     s++;
+		  return s - p;
+		}
+		```
+		- *注：因為在 `const char *s` 中 s 已經被變成了普通的指標，所以可以被移動*
+- idiom:
+	- 意思：找尋在字串中最後面的 null character
+	1. 
+		```c
+		while (*s)
+		  s++;
+		```
+	2. 
+		```c
+		while (*s++) ;
+		```
+<br>
+
+#### 二，Copying a String
+
+ - 複製字串：
+1. 最初版的 program
+	```c
+	char *strcat(char *s1, const char *s2)
+	{
+	  char *p = s1;
+	  
+	  while (*p != '\0')
+	    p++;
+	  while (*s2 != '\0') {
+	    *p = *s2;
+	    p++;
+	    s2++;
+	  }
+	  *p = '\0';
+	  return s1;
+	}
+	```
+	- 示意圖：
+		1. 初始狀態<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_5.png)
+		2. 第一個 while loop 結束<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_6.png)
+		3. 第二個 while loop 的初始狀態<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_7.png)
+		4. 執行完第二個 while loop<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_8.png)
+		5. 最後再補上 '\\0'<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_9.png)
+1. 濃縮過後的 program
+	```c
+	char *strcat(char *s1, const char *s2)
+	{
+	  char *p = s1;
+	  
+	  while (*p)
+	    p++;
+	  while (*p++ = *s2++) ;
+	  return s1;
+	}
+	```
+- **Idiom**:<br>用途：**複製字串**
+	```c
+	while (*p++ = *s2++) ;
+	```
+	- 注意
+		1. side effect 一定會發生在 \* 之後，但在進入 loop body 的之前
+		2. 慢動作觀看：
+			1. 先記住後綴的 increment (因為 \*p++ 等價於 \*(p++))
+			2. 接著再 assignment
+			3. 判斷是否為真
+			4. 如果是 '\\0' (也就是 false) 的話，就停止迴圈
+			5. 因為在前面就被記住需要執行 increment ，所以 increment 依然會發生，也就是說**結束後的 p 與 s2 會被指向 '\\0' 之後**
+<br><br>
+
+## IIV. Arrays of Strings
+
+#### 一，Intro
+
+- 過往用的陣列都會浪費空間，因為**多出來的空間會被 '\\0' 給填滿**，且每個 row 的長度都相同<br>E.g:
+	```c
+	char planets[][8] = {"Mercury", "Venus", "Earth",
+	                     "Mars", "Jupiter", "Saturn", 
+	                     "Uranus", "Neptune", "Pluto"};
+	```
+	示意圖：<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_10.png)
+- **`*a[NUM_COLS]` 與 `(*a)[NUM_COLS]` 的差異**
+	- C 語言的讀法規則，由先到後為
+		1. ()
+		2. \[]
+		3. \*
+	- `(*a)[NUM_COLS]`：**指向陣列的指標**
+		1. 先看到 ()，所以  (\*a) 是黏在一起的，因此為**一個指標**
+		2. 接著再看到 \[] ，所以是**指向陣列**
+	- `*a[NUM_cols]`：**指向指標的陣列**
+		1. 先看到 \[]，所以 a 與 \[] 是黏在一起的，因此為**陣列**
+		2. 接著才看到 \*，所以是儲存指標
+- 用**指向指標的陣列**來儲存，就可以使每個 row 都儲存**不同的長度的字串**，也就是說這個陣列所**儲存的都是位置**<br>E.g:
+	```c
+	char *planets[] = {"Mercury", "Venus", "Earth",
+	                   "Mars", "Jupiter", "Saturn",
+	                   "Uranus", "Neptune", "pluto"};
+	```
+	示意圖：<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_11.png)
+	利用方式：雖然他是一維陣列，但**使用方式與二維陣列相同**<br>E.g:
+	```c
+	for (i = 0; i < 9; i++)
+	  if (planets[i][0] == 'M')
+	    printf("%s begins with M\N", planets[i]);
+	```
+<br><br>
+
+#### 二，Command-Line Arguments (program parameters)
+
+- 用途：**讀取指令列中的引數**<br>E.g: 在終端機中
+	```
+	ls -l remind.c
+	```
+	- 讀取 -l 這個引數
+	- 雖然用途是來讀取引數，但其實**全部都會被讀到**
+- 用法：在 `main` 中增加 `argc` 與 `argv[]`<br>E.g:
+	```c
+	int main(int argc, char *argv[])
+	{
+	  ...
+	}
+	```
+	- `argc` (argument count): 命令列中的**引數數量**，包括**程式名字**
+	- `argv` (argument vecter): 
+		- 型別為**指標的陣列** (`char *argv[]`)
+		- 用以**指向引數**
+		- 因為是陣列，所以一樣是從 0 開始數
+		- 最後一個指標為 **NULL pointer**，裡面存有 NULL，**標示陣列的結束** (也就是在 argv\[argc] 的位址)
+	- E.g: 終端機中輸入
+		```
+		ls -l remind.c
+		```
+		- argc 為 3 (分別為 ls, -l, remind.c)，而 ls 就是 program name
+		- argv 的示意圖：<br>![](./Ch13_attachment/c-programming_a-modern-approach_ch13_12.png)
+- 取用 command-line arguments
+	1. 用 interger variable 當作 index<br>E.g: 
+		```c
+		int i;
+		
+		for (i = 1; i < argc; i++)
+		  printf("%s\n", argv[i]);
+		```
+	2. 運用多重指標<br>E.g:
+		```c
+		char **P;
+		
+		for (p = &argv[1]; *p != NULL; p++)
+		  printf("%s\n", *p);
+		```
+		- \*\*p 為多重指標，用來**指向指標的位址**
+		- 因為 argv 是指標的陣列，所以我們必須要在**指標的位址上跳轉**，因而只能用多重指標
+		- 因為 \* 的意思就是**指向的東西的實際值**，所以 \*p 會變成是 argv\[] 的實際值，而 argv\[] 裡面所裝的實際值也就是字串的位址，因為 C 在處理中實際上都是**以字串的位址來代表字串本身**，所以  \*p 本身是字串
+<br><br>
+
+#### 三，範例二：Checking Planet Names
+
+>[!success]- program
+>```c
+> // Checks planet names
+> 
+> #include <stdio.h>
+> #include <string.h>
+> 
+> #define NUM_PLANETS 8
+> 
+> int main(int argc, char* argv[]) {
+>   char* planet[] = {"Mercury", "Venus",  "Earth",  "Mars",
+>                     "Jupiter", "Saturn", "Uranus", "Neptune"};
+> 
+>   int i, j;
+> 
+>   for (i = 1; i < argc; i++) {
+>     for (j = 0; j < NUM_PLANETS; j++) {
+>       if ((strcmp(argv[i], planet[j])) == 0) {
+>         printf("%s is planet %d\n", argv[i], j + 1);
+>         break;
+>       }
+>     }
+>     if (j == NUM_PLANETS) {
+>       printf("%s is not a planet\n", argv[i]);
+>     }
+>   }
+> 
+>   return 0;
+> }
+>```
+
+>[!success]- output
+>```
+>Jupiter is planet 5
+>venus is not a planet
+>Earth is planet 3
+>fred is not a planet
+>```
+
+<br><br>
+
+---
+# Exercise
+
+## Section 13.3
+#### **EX.1**
+
+- 我的答案
+	1. (b), 因為 %c 用於 character，而後面所接的 "\\n" 為 string
+	2. (c), 因為 %s 用於 string，而後面所接的 '\\n' 為 character
+	3. (e), printf 後面需要的是位址 (也就是字串的位址)，所以不能接 character
+	4. (h), putchar 後面所需要的是 character，所以不能用 string
+	5. (i), 因為 puts 後面所需的是 string，所以不能接 character
+	6. **(j)**, 因為 puts 本身就會放置一個換行符在後面，所以會變成有兩個空行
