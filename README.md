@@ -33,7 +33,7 @@
 | **10**  | Program Organization                    |   ✅    |   [view](./Ch10_program-organization)    |
 | **11**  | Pointers                                |   ✅    |                [view](./)                |
 | **12**  | Pointers and Arrays                     |   ✅    |    [view](./Ch12_pointers-and-arrays)    |
-| **13**  | Strings                                 |   🔄   |          [view](./Ch13_strings)          |
+| **13**  | Strings                                 |   ✅    |          [view](./Ch13_strings)          |
 | **14**  | The Preprocessor                        |   ⬜    |                                          |
 | **15**  | Writing Large Programs                  |   ⬜    |                                          |
 | **16**  | Structures, Unions, and<br>Enumerations |   ⬜    |                                          |

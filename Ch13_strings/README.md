@@ -3,11 +3,18 @@
 ## Program overview
 
 
-| 題號  | 功能                 | 觀念                      | 連結                 |
-| --- | ------------------ | ----------------------- | ------------------ |
-| 範例一 | 輸入一個月內的事情，並依日期排序輸出 | string.h 中關於 string 的操作 | [view](./remind.c) |
+| 題號      | 功能                 | 觀念                      | 連結                                      |
+| ------- | ------------------ | ----------------------- | --------------------------------------- |
+| 範例一     | 輸入一個月內的事情，並依日期排序輸出 | string.h 中關於 string 的操作 | [view](./remind.c)                      |
+| 範例二     | 檢查行星的名字            | 學習使用命令列引數               | [view](./planet.c)                      |
+| Proj.4  | 將命令列引數倒著列印         | 用雙重指標移動 argument vector | [view](./programming-project_Ch13_4.c)  |
+| Proj.5  | 將命令列引數轉為數值並加總      | 學習使用命令列引數，並將子串轉換為數值     | [view](./programming-project_Ch13_5.c)  |
+| Proj.18 | 將數字的月份轉為月份名        | 使用指標的陣列來對照月份            | [view](./programming-project_Ch13_18.c) |
+<br><br>
 
-## I. String Literals
+---
+## Note
+### I. String Literals
 
 #### 一，Intro
 
@@ -106,7 +113,7 @@ char digit_to_hex_char(int digit)
 	```
 <Br>
 
-## II. String Variables
+### II. String Variables
 
 #### 一，Intro
 
@@ -183,7 +190,7 @@ char digit_to_hex_char(int digit)
 		```
 <br>
 
-## III. Reading and Writing Strings
+### III. Reading and Writing Strings
 
 #### 一，Writing Strings Using `printf` and `puts`
 
@@ -280,7 +287,7 @@ char digit_to_hex_char(int digit)
 		注意： ch 的型別為 **`int`，因為要接受 getchar()**，所以必須用 `int`
 <br><Br>
 
-## IV. Accessing the Characters in a String
+### IV. Accessing the Characters in a String
 
 - 因為字串是以陣列的方式來儲存的，所以可以以陣列的方式來使用<br>E.g: 計算在字串內的空白有多少
 	1. 一般變數的寫法 
@@ -311,7 +318,7 @@ char digit_to_hex_char(int digit)
 		```
 <br>
 
-## V. Using the C String Library
+### V. Using the C String Library
 
 #### 一，Intro
 
@@ -1148,7 +1155,7 @@ char digit_to_hex_char(int digit)
 
 <br><br>
 
-## IV. String Idioms
+### IV. String Idioms
 
 #### 一，Searching for the End of a String
 
@@ -1263,7 +1270,7 @@ char digit_to_hex_char(int digit)
 			5. 因為在前面就被記住需要執行 increment ，所以 increment 依然會發生，也就是說**結束後的 p 與 s2 會被指向 '\\0' 之後**
 <br><br>
 
-## IIV. Arrays of Strings
+### IIV. Arrays of Strings
 
 #### 一，Intro
 
@@ -1391,9 +1398,9 @@ char digit_to_hex_char(int digit)
 <br><br>
 
 ---
-# Exercise
+## Exercise
 
-## Section 13.3
+### Section 13.3
 #### **EX.1**
 
 - 我的答案
@@ -1403,3 +1410,563 @@ char digit_to_hex_char(int digit)
 	4. (h), putchar 後面所需要的是 character，所以不能用 string
 	5. (i), 因為 puts 後面所需的是 string，所以不能接 character
 	6. **(j)**, 因為 puts 本身就會放置一個換行符在後面，所以會變成有兩個空行
+<br>
+
+#### **EX.2**
+
+- 我的答案
+	1. (a): `putchar` 是用來列印 character 的，不能用來列印字串
+	2. **(b)**: 因為 `putchar` 是用來列印 character，且 p 實際上紀錄的是 'a' 的位址，所以代表 \*p 就是 character，因此是對的<br>output:
+		```
+		a
+		```
+	3. (c): 標準列印字串的方式<br>output:
+		```
+		abc
+		```
+	4. (d): 因為字串被視為是位址，所以 puts 後面必須放置字串位址，也就是 p 而不是 \*p
+<br>
+
+#### EX.3
+
+- 我的答案:<br>i 為 12，而 s 為 abc34，j 則是 56，剩下的 def78 會被放到 buffer 中
+- reason:<br>因為 scanf(%s) 遇到空白，換行與 tab 皆會停止輸入，而 j 又只能輸入數字，所以剩下的 def78 就無法被讀取了
+<br>
+
+#### EX.4
+
+- 原本的 read_line function
+	```c
+	int read_line(char str[], int n)
+	{
+	  int ch, i = 0;
+	  
+	  while ((ch = getchar()) != '\n')
+	    if (i < n)
+	      str[i++] = ch;
+	  str[i] = '\0';
+	  // terminates string
+	  return i;
+	  // number of characters stored
+	}
+	```
+1. (a)
+	```c
+	int read_line(char str[], int n)
+	{
+	  int ch, i = 0;
+	  
+	  while(isspace(ch = getchar()))
+	    ;
+	  
+	  // 輸入第一個字
+	  // 判斷是否為 EOF (檔案結尾)
+	  if (ch != EOF && i < n)
+	    str[i++] = ch;
+	  
+	  while ((ch = getchar()) != '\n' && ch != EOF)
+	    if (i < n)
+	      str[i++] = ch;
+	  str[i] = '\0';
+	  // terminates string
+	  return i;
+	  // number of characters stored
+	}
+	```
+2. (b)
+	```c
+	int read_line(char str[], int n)
+	{
+	  int ch, i = 0;
+	  
+	  while (!isspace(ch = getchar()) && ch != EOF)
+	    if (i < n)
+	      str[i++] = ch;
+	  str[i] = '\0';
+	  // terminates string
+	  return i;
+	  // number of characters stored
+	}
+	```
+3. (c)
+	```c
+	int read_line(char str[], int n)
+	{
+	  int ch, i = 0;
+	  
+	  while ((ch = getchar()) != '\n' && ch != EOF)
+	    if (i < n)
+	      str[i++] = ch;
+	      
+	  // 將換行符儲存進 str 之中
+	  if (i < n)
+	    str[i++] = '\n';
+	    
+	  str[i] = '\0';
+	  // terminates string
+	  return i;
+	  // number of characters stored
+	}
+	```
+4. (d)
+	```c
+	int read_line(char str[], int n)
+	{
+	  int ch, i = 0;
+	  
+	  while ((ch = getchar()) != '\n' && ch != EOF)
+	    if (i < n)
+	      str[i++] = ch;
+	    else
+	      break;
+	
+	  str[i] = '\0';
+	  // terminates string
+	  return i;
+	  // number of characters stored
+	}
+	```
+<br>
+
+### Section 13.4
+
+#### EX.5
+
+1. (a)
+	```c
+	void capitalize(char str[])
+	{
+	  for (int i = 0; str[i]; i++)
+	    str[i] = toupper(str[i]);
+	}
+	```
+2. (b)
+	```c
+	void capitalize(char *str)
+	{
+	  while (*str) {
+	    *str = toupper(*str);
+	    str++;
+	  }
+	}
+	```
+<Br>
+
+#### EX.6
+
+- 我的答案
+	```c
+	void censor(char *str)
+	{
+	  int consec_ch = 0;
+	  char *initial_ch;
+	  
+	  while (*str) {
+	    // 判斷是否有可能是 foo
+	    if (consec_ch == 0 && *str == 'f') {
+	      consec_ch++;
+	      initial_ch = str;
+	    } else if ((conse_ch == 1 || conse_ch == 2) && *str == 'o') {
+	      consec_ch++;
+	    } else
+	      consec_ch = 0;
+	      
+	    // 將 foo 替換成 xxx
+	    if (consec_ch == 3) {
+	      initial_ch[0] = 'x';
+	      initial_ch[1] = 'x';
+	      initial_ch[2] = 'x';
+	    }
+	    
+	    str++;
+	  }
+	}
+	```
+- 問題點：
+	- 如果是 fofoo 因為第二個 f 被判定說不連續，所以不會被檢查到
+	- 最簡單的寫法是看到 f 後直接檢查後兩個字否為 oo
+- 修正後的答案：
+	```c
+	void censot(char *str)
+	{
+	  while (*str) {
+	    if (str[0] == 'f' && str[1] == 'o' && str1[2] == 'o') {
+	      str[0] = 'x';
+	      str[1] = 'x';
+	      str[2] = 'x';
+	      str += 3;
+	      // 因為如果前面的檢查都通過了，就代表後面三個字元確實都存在
+	    } 
+	    str++;
+	  }
+	}
+	```
+
+### Section 13.5
+
+#### EX.7
+
+- 我的答案：
+	- (d) 因為 strcat 會將 "" (空字串) 放進 str 中的最後面，其他的都是直接放置進最前面
+	- *注: (a) 正確，因為 null character 的 ASCII 代號本來就是 0*
+<br>
+
+#### EX.8
+
+- 我的答案：
+	1. 執行 `strcpy(str, "tire-bouchon")` 後的 str 為
+		```
+		tire-bouchon
+		```
+	2. 執行 `strcpy(&str[4], "d-or-wi")` 後
+		```
+		tired-or-wi
+		```
+	3. 執行 `strcat(str, "red?")` 後
+		```
+		tired-or-wired?
+		```
+	- *注： 在第二步時， n 會被 "d-or-wi" 的 null character 所影響到，進而直接結束字串*
+<br>
+
+#### EX.9
+
+- 我的答案
+	```
+	computer
+	```
+	```
+	computers
+	```
+- Reason
+	1. 因為 s1 中的第一個字母為 c ，s2 則是 s，所以 computer < science，因此會執行
+		```c
+		strcat(s1, s2)
+		```
+		將 s1 變成 computerscience
+	2. strlen(s1) 為 15 ，所以 s1\[strlen(s1)-6] = '\\0' 會將computerscience 中第二個 c 變為 null character，所以結果就會變成 computers
+<br>
+
+#### **EX.10**
+
+- 我的答案
+	- 因為 p 並未被初始化，所以它不知道會被指向哪裡
+<br>
+
+#### EX.11
+
+- 原本的 function
+	```c
+	int strcmp(char *s, char *t)
+	{
+	  int i;
+	  
+	  for (i = 0; s[i] == t[i]; i++)
+	    if (s[i] == '\0')
+	      return 0;
+	  return s[i] - t[i];
+	}
+	```
+- 用指標算術改寫
+	```c
+	int strcmp(char *s, char *t)
+	{
+	  while (*s == *t) {
+	    if (*s == '\0')
+	      return 0;
+	    s++;
+	    t++;
+	  }
+	  return *s - *t;
+	}
+	```
+<Br>
+
+#### EX.12
+
+- 我的答案 
+	```c
+	void get_extension(const char *file_name, char *extension)
+	{
+	  const char *p;
+	  int file_name_len = strlen(file_name);
+	  
+	  // 找出最後一個 . 的位址
+	  for (p = file_name; *p != '\0'; p++)
+	    if (*p == '.')
+	      file_name = p + 1;
+	      
+	  // 將副檔名複製進 extension
+	  if (strlen(file_name) == file_name_len)
+	    *extension = '\0';
+	  else 
+	    strcpy(extension, file_name);
+	}
+	```
+<br>
+
+#### EX.13
+
+- 我的答案：
+```c
+void build_index_url(const char *domain, char *index_url)
+{
+  char title_url[50];
+  
+  strcpy(title_url, "http://www.");
+  strcat(title_url, domain);
+  strcpy(index_url, title_url);
+  strcat(index_url, "/index.html");
+}
+```
+- 更簡潔的寫法：直接將字串放進 index_url 中
+	```c
+	void build_index_url(const char *domain, char *index_url)
+	{
+	  strcpy(index_url, "http://www.");
+	  strcat(index_url, domain);
+	  strcat(index_url, "/index.html");
+	}
+	```
+<br>
+
+### Section 13.6
+
+#### **EX.14**
+
+- 因為 --\*p 等價於 --(\*p) ，所以它會將全部的字母依照 ASCII 碼向前推一格，所以 output 為
+	```
+	Grinch
+	```
+<br>
+
+#### EX.15
+
+- 我的答案：
+	1. (a): 3
+	2. (b): 0
+	3. (C): 回傳 s 字串中第一個不在 t 字串的字元索引值 (index)
+<br>
+
+#### EX.16
+
+- 我的答案：
+	```c
+	int count_space(const char *s)
+	{
+	  int count = 0;
+	  
+	  while (*s) {
+	    if (*s == ' ')
+	      count++;
+	    s++;
+	  }
+	  return count;
+	}
+	```
+<Br>
+
+#### **EX.17**
+
+- 我的答案
+```c
+bool test_extension(const char *file_name,
+                    const char *extension)
+{
+  const char *file_extension;
+
+  // 將 file_extension 指向 file_name 中的副檔名
+  for (; *file_name; file_name++) 
+    if (*file_name == '.')
+      file_extension = file_name + 1;
+      
+  for (;*file_extension && *extension; file_extension++, extension++) {
+    if (!(toupper(*file_extension) == toupper(*extension)))
+      return false;
+  }
+  return true;
+}
+```
+- 錯誤點：
+	1. 因為 file_name 不一定會有副檔名，如果沒有的時候就會讀到錯誤的位址
+	2. 可以直接從最後一個位置來倒著找尋 .
+- 修正後的答案：
+	```c
+	bool test_extension(const char *file_name,
+	                    const char *extension)
+	{
+	  const char *p = file_name;
+	  
+	  // 將 p 設置到 file_name 的結尾
+	  while (*p)
+	    p++;
+	
+	  // 找尋 .    
+	  for (; p >= file_name; p--)
+	    if (*p == '.') {
+	      // 因為要定位到 . 後面的字，
+	      // 所以要 + 1
+	      p++;
+	      break;
+	    }
+	
+	  // 沒有 . 就直接回傳 false
+	  // 開頭的點代表的是隱藏檔，所以不算副檔名
+	  if (p == file_name)
+	    return false;
+	    
+	  // 判斷副檔名是否相同
+	  while (toupper(*p) == toupper(*extension)) {
+	    if (*p == '\0')
+	      return true;
+	    else {
+	      p++;
+	      extension++;
+	    }
+	  }
+	  return false;
+	}
+	```
+<br>
+
+#### EX.18
+
+- 我的答案：
+```c
+void remove_filename(char *url)
+{
+  char *p = url;
+  
+  // 將 p 移到 url 的最底部 
+  while (*p)
+    p++;
+    
+  // 將 p 移到最後一個 / 上
+  while (p >= url && *p != '/')
+    p--;
+  *p = '\0';
+}
+```
+
+## Programming Project
+
+### Proj.4：將命令列引數倒著列印
+
+>[!success]- program
+>```c
+>//// This is my program for programming project 4
+>// in C Programming: a modern approach
+>// This program is used to echoes its command-line arguments
+>// in reverse
+>
+>#include <stdio.h>
+>
+>int main(int argc, char *argv[]) {
+>    for (char **p = &argv[argc - 1]; p > &argv[0]; p--)
+>      printf("%s ", *p);
+>    printf("\n");
+>}
+>```
+
+>[!success]- output
+>```
+>$ ./reverse aaaaaaaaaaaa and rrrrrrrrr
+>rrrrrrrrr and aaaaaaaaaaaa 
+>```
+
+<br>
+
+### Proj.5：將命令列引數轉為數值並加總
+
+- 學習重點：
+	- 要用指標的話必須要用多重指標才可以指向指標的位址，並且跳向下一個 argument vecter
+
+>[!success]- program
+>```c
+> // This is my program for programming project 5
+> // in C Programming: a modern approach
+> // This program is uesed to add up its command-line arguments
+> 
+> #include <stdio.h>
+> #include <stdlib.h>
+> 
+> int main(int argc, char* argv[]) { 
+>     int sum; 
+> 
+>     for (char **p = &argv[1]; *p != NULL; p++) {
+>         sum += atoi(*p);
+>     }
+> 
+>     printf("Total: %d\n", sum);
+> 
+>     return 0;
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./programming-project_Ch13_5 8 24 62 12 456 879  55 5 55 5 55 5 5 2 2 2 22 4 4 4 48 9  4
+>Total: 1727
+>```
+
+<br>
+
+### Proj.18：將數字的月份轉為月份名
+
+>[!success]- program
+>```c
+> // This my program for programming project 18
+> // in C Programming: a modern approach
+> // This program is uesed to acceopt a date form
+> // the user in the form mm/dd/yyy and then displays
+> // it in the form month dd, yyy
+> 
+> #include <stdio.h>
+> 
+> void enter_and_read_date(int* num_month, int* day, int* year);
+> const char* trans_num_to_name_month(int num_month);
+> void print_outcome(const char name_month[], int day, int year);
+> 
+> int main(void) {
+>   int num_month, day, year;
+>   const char *name_month;
+> 
+>   enter_and_read_date(&num_month, &day, &year);
+>   name_month = trans_num_to_name_month(num_month);
+> 
+>   print_outcome(name_month, day, year);
+> }
+> 
+> void enter_and_read_date(int* num_month, int* day, int* year) {
+>   printf("Enter a date (mm/dd/yyyy): ");
+>   scanf("%d /%d /%d", num_month, day, year);
+> }
+> 
+> const char* trans_num_to_name_month(int num_month) {
+>   const char* name_month_code[12] = {"January",
+>                                      "February",
+>                                      "March",
+>                                      "April",
+>                                      "May",
+>                                      "June",
+>                                      "July",
+>                                      "August",
+>                                      "September",
+>                                      "October",
+>                                      "November",
+>                                      "December"};
+> 
+>   return name_month_code[num_month - 1];
+> }
+> 
+> void print_outcome(const char name_month[], int day, int year) {
+>   printf("You entered the date %s %d, %d\n", name_month, day, year);
+> }
+>```
+
+>[!success]- output
+>```
+>$ ./programming-project_Ch13_18 
+>Enter a date (mm/dd/yyyy): 2/17/2011
+>You entered the date February 17, 2011
+>```
