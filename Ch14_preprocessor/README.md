@@ -342,29 +342,29 @@
 
 	| Name    | Description                       |
 	| ------- | --------------------------------- |
-	| \_LINE_ | 被編譯時的行數                           |
-	| \_FILE_ | 被編譯時的檔名                           |
-	| \_DATE_ | 被編譯時的日期 (格式為 Mmm dd yyy)          |
-	| \_TIME_ | 被編譯時的時間 (格式為 hh:mm:ss)            |
-	| \_STDC_ | 如果被編譯時是遵守 c 的標準 (C89 或 C99) 就會是 1 |
+	| \_\_LINE\_\_ | 被編譯時的行數                           |
+	| \_\_FILE\_\_ | 被編譯時的檔名                           |
+	| \_\_DATE_\_ | 被編譯時的日期 (格式為 Mmm dd yyy)          |
+	| \_\_TIME\_\_ | 被編譯時的時間 (格式為 hh:mm:ss)            |
+	| \_\_STDC\_\_ | 如果被編譯時是遵守 c 的標準 (C89 或 C99) 就會是 1 |
 - 用法：
-	1. 幫助判斷程式的版本與時間<br>E.g:
+	1. 幫助判斷程式的**版本與時間**<br>E.g:
 		```c
 		printf("Wachy Windows (c) 2010 Wacky Software, Inc. \n");
-		printf("Compiled on %s at %s\n", _DATE_, _TIME_);
+		printf("Compiled on %s at %s\n", __DATE__, __TIME__);
 		```
 		執行後的結果：
 		```
 		Wacky Windows (c) 2010 Wacky Software, Inc.
 		Compiled on Dec 23 2010 at 22:18:48
 		```
-	2. 用來判斷程式是在第幾行的時候就遇到問題<br>E.g: 檢查分母是否為零
+	2. 用來判斷程式是在**第幾行**的時候就遇到問題<br>E.g: 檢查分母是否為零
 		- macro
 			```c
 			#define CHECK_ZERO(divisor)  \
 			  if (divisor == 0)  \
 			    printf("*** Attempt to divide by zero on line %d "  \
-			           "of file %s ***\n", _LINE_, _FILE_)
+			           "of file %s ***\n", __LINE__, __FILE__)
 			```
 		- program
 			```c
@@ -376,3 +376,203 @@
 			*** Attempt to divide vy aero on line 9 of file foo.c ***
 			```
 <br><Br>
+
+#### 九，Addition Predefined Macros in C99
+
+- C99 額外提供的 predefined macros
+
+
+	| Name                        | Description                                                                            |
+	| --------------------------- | -------------------------------------------------------------------------------------- |
+	| \_\_STDC\_\_HOSTED\_\_            | 1 if this is a hosted implementation; 0 if it is freestanding                          |
+	| \_\_STDC_\_VERSION\_\_              | version of C standard supported                                                        |
+	| \_\_STDC\_IEC\_559\_\_          | 1 if IEC 60559 floating-point arithmetic is supported                                  |
+	| \_\_STDC\_IEC\_559\_COMPLEX\_\_ | 1 if IEC 60559 complex arithmetic is supported                                         |
+	| \_\_STDC\_ISO\_10646\_\_        | yyyymmL if wchar_t values match the ISO 10646 standard of the specified year and month |
+- `__STDC__HOSTED__`
+	- implementation of c: 也就是執行 c 所需的環境，由編譯器再加上其他的軟體所組成
+		1. hosted implementation: 任何遵守 C99 的規定的 program 都是
+		2. greestanding implementation: 不使用其他的軟體 (連 <stdio.h> 都不能用)，最基本的程式
+- `__STDC__VERSION_`
+	- 用來檢查 c 的版本
+	- 輸出的格式為 long integer constant ，例如 c99 的代碼就是 199409L
+- `__STDC_IEC_559__`
+	- 如果編譯器用的浮點計算是依據 IEC 60559 就會回傳 1
+- `__STDC_IEC_559_COMPLEX__`
+	- 如果在計算複雜的算術時是依據 IEC 60559 就會回傳 1
+- `__STDC_ISO_10646__`
+	- 檢查 `wchar_t` 是否使用 ISO/IEC 10646 標準
+<br>
+
+#### 十，Empty Macro Arguments
+
+- 如果在使用 macro 的時候給予**空的引數**，後面的 replacement list 在那個引數就會**直接空掉**<Br>E.g:
+	- macro
+		```c
+		#define ADD(x, y) (x + y)
+		```
+	- program
+		```c
+		i = ADD(, k)
+		```
+		經過 preprocessor 處理後會變成
+		```c
+		i = (+k)
+		```
+		就是 i 會純粹的變空這樣
+- 如果是在 replacement list 遇到 **\# operator** ，就會變成**空的字串 ("")**<br>E.g:
+	```c
+	#define MK_STR(x) #x
+	...
+	char empty_str[] = MK_STR();
+	```
+	經過 preprocessor 後會變成
+	```c
+	char empty_str[] = "";
+	```
+- 如果在 replacement list 遇到 **\#\# operato** ，則會變成 placemarker token，也就是相當於**直接消失**<br>E.g:
+	```c
+	#define JOIN(x, y, z) x##y##z
+	...
+	int JOIN(a, b, c), JOIN(a, b, ), JOIN(a, , c), JOIN(, , c);
+	```
+	經過 preprocessor 後會變成
+	```c
+	int abc, ab, ac, c;
+	```
+<br>
+
+#### 十一，Macros with a Variable Number of Arguments
+
+- 在 C99 中可以讓 macro 接受**不知道有幾個**的引數<br>E.g:
+	- macro
+		```c
+		#define TEST(condition, ...) ((condition) ?  \
+		  printf("Passed test: %s\n", #condition)    \
+		  printf(__VA_ARGS__))
+		```
+- **... (ellipsis)** 用來**吸收額外的參數** (**逗號也會被吸收進去**)
+- `__VA_ARGX__` 用來**呼叫**剛剛 ... 所**吸收到的參數**<br>E.g: 將上面的 macro 拿來使用
+	```c
+	TEST(voltage <= max_voltage,
+	     "Voltage %d exceeds %d\n", voltage, max_voltage);
+	```
+	condition 就是第一個參數 (voltage <= max_voltage)<br>... 會將整個 "Voltage %d exceeds %d\n", voltage, max_voltage 都吸收進去，並用 `__VA_ARGS__` 代指他們<br>所以經過 preprocessor 處理過後會變成
+	```c
+	((voltage <= max_voltage) ?
+	  printf("Passed test: %s\n", "voltage <= max_voltage)
+	  printf("voltage%d exceeds %d\n", voltage, max_voltage));
+	```
+<br>
+
+#### 十二，The `__func__` Identifier
+
+- 主要用途：**debug**
+- 用法與 string variable 很像
+- 效用等價於
+	```c
+	static const char __func__[] = "function-name"
+	```
+	- function_name: 函數的名稱
+	- 也就是用 `__func__` 代指**當前的 function**
+- 實際用法的範例
+	1. macro:
+		```c
+		#define FUNCTION_CALLED() printf("%s called\n", __func__)
+		#define FUNCTION_RETURNS() printf("%s returns\n", __func__)
+		```
+	2. program
+		```c
+		void f(void)
+		{
+		  FUNCTION_CALLED();  // displays "f called"
+		  ...
+		  FUNCTION_RETURNS();  // displays "f returns"
+		}
+		```
+<br><Br>
+
+## IV. Conditional Compilation
+
+#### 一，The `#if` and `#endif` Directives
+
+- 用途：加入**條件測試**來決定要不要讓編譯器知道這幾行
+- form:
+	- 用 `#if` 與 `#endif` 來將 expression 包住
+	- 
+		```c
+		#if constant-expression
+		...
+		#endif
+		```
+	- 如果 constant-expression 為真，就會將中間的 statement 顯示給編譯器
+- E.g: 在 debug 中 
+	- macro
+		```c
+		#define DEBUG 1
+		// 與之前的條件判斷一樣
+		// 只要不為 0 就是 ture
+		```
+	- program
+		```c
+		#if DEBUG
+		printf("Value of i: %d\n", i);
+		printf("Value of j: %d\n", j);
+		#endif
+		```
+- 也一樣可以加上 ! 來檢測是否為假<br>E.g:
+	```c
+	#if !DEBUG
+	```
+<Br>
+
+#### 二，The `defined` Operator
+
+- 如果 identifier **已經被定義**過成 macro 了就會是 1 ，否則就是 0<br>E.g:
+	```c
+	#if defined(DEBUG)
+	...
+	#endif
+	```
+	也可以省略 () 變成
+	```c
+	#if defined DEBUG
+	```
+	也就是說只要 DEBUG 有被定義過就行，**不一定要給值**<br>E.g: 之前定義 macro 時
+	```c
+	#define DEBUG
+	```
+<Br>
+
+#### 三，The `#ifdef` and `#ifndef` Directives
+
+1. `#ifdef`
+	- 用途：測試 identifier 是否**已經**被定義成 macro 了
+	- form: 與 `#if` 類似
+		```c
+		#ifdef identifier
+		Lines to be included if identigier is defined as a macro
+		#endif
+		```
+	- 與 `#if` + `defined` 功用相同，也就是說
+		```c
+		#if def identifier
+		```
+		等價於
+		```c
+		#if defined(identifier)
+		```
+2. `ifndef`
+	- 用途：`ifdef` 的相反，用來測試是不是**沒有**被定義成 macro
+	- form:
+		```c
+		#ifndef identifier
+		```
+	- 也就是說
+		```c
+		#ifndef identifier
+		```
+		等價於
+		```c
+		#if !defined(identifier)
+		```
