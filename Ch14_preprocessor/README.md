@@ -1,4 +1,4 @@
-# Note
+# C program: a modern approach Ch.14 note
 
 ## I. How the Preprocessor Works
 
