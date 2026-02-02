@@ -20,24 +20,24 @@
 ---
 ## 學習進度表
 
-| Chapter | Topic                                   | Status |               Notes & Code               |
-| :-----: | :-------------------------------------- | :----: | :--------------------------------------: |
-| **02**  | Fundamentals                            |   ✅    |        [View](./Ch2_fundamentals)        |
-| **03**  | Formatted Input/Output                  |   ✅    | [View](./Ch3_formatted-input-and-output) |
-| **04**  | Expressions                             |   ✅    |         [view](./Ch4_expression)         |
-| **05**  | Selection Statements                    |   ✅    |    [view](./Ch5_selection-statement)     |
-| **06**  | Loops                                   |   ✅    |            [view](./Ch6_loop)            |
-| **07**  | Basic Types                             |   ✅    |         [view](./Ch7_Basic-Type)         |
-| **08**  | Arrays                                  |   ✅    |           [view](./Ch8_arrays)           |
-| **09**  | Functions                               |   ✅    |          [view](./Ch9_function)          |
-| **10**  | Program Organization                    |   ✅    |   [view](./Ch10_program-organization)    |
-| **11**  | Pointers                                |   ✅    |                [view](./)                |
-| **12**  | Pointers and Arrays                     |   ✅    |    [view](./Ch12_pointers-and-arrays)    |
-| **13**  | Strings                                 |   ✅    |          [view](./Ch13_strings)          |
-| **14**  | The Preprocessor                        |   ✅    |       [view](./Ch14_preprocessor)        |
-| **15**  | Writing Large Programs                  |   ✅    |   [view](./Ch15_writing-large-program)   |
-| **16**  | Structures, Unions, and<br>Enumerations |   ⬜    |                                          |
-| **17**  | Advanced Uses of Pointers               |   ⬜    |                                          |
+| Chapter | Topic                                   | Status |                   Notes & Code                   |
+| :-----: | :-------------------------------------- | :----: | :----------------------------------------------: |
+| **02**  | Fundamentals                            |   ✅    |            [View](./Ch2_fundamentals)            |
+| **03**  | Formatted Input/Output                  |   ✅    |     [View](./Ch3_formatted-input-and-output)     |
+| **04**  | Expressions                             |   ✅    |             [view](./Ch4_expression)             |
+| **05**  | Selection Statements                    |   ✅    |        [view](./Ch5_selection-statement)         |
+| **06**  | Loops                                   |   ✅    |                [view](./Ch6_loop)                |
+| **07**  | Basic Types                             |   ✅    |             [view](./Ch7_Basic-Type)             |
+| **08**  | Arrays                                  |   ✅    |               [view](./Ch8_arrays)               |
+| **09**  | Functions                               |   ✅    |              [view](./Ch9_function)              |
+| **10**  | Program Organization                    |   ✅    |       [view](./Ch10_program-organization)        |
+| **11**  | Pointers                                |   ✅    |                    [view](./)                    |
+| **12**  | Pointers and Arrays                     |   ✅    |        [view](./Ch12_pointers-and-arrays)        |
+| **13**  | Strings                                 |   ✅    |              [view](./Ch13_strings)              |
+| **14**  | The Preprocessor                        |   ✅    |           [view](./Ch14_preprocessor)            |
+| **15**  | Writing Large Programs                  |   ✅    |       [view](./Ch15_writing-large-program)       |
+| **16**  | Structures, Unions, and<br>Enumerations |   🔄   | [view](./Ch16_structure-unions-and-enuberations) |
+| **17**  | Advanced Uses of Pointers               |   ⬜    |                                                  |
 
 
 *(符號說明：✅ 完成 / 🔄 進行中 / ⬜ 尚未開始)*
