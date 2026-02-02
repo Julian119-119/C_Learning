@@ -1,4 +1,4 @@
-# Note
+# C program: a modern approach Ch.16 note
 
 - *注：本章所講的 structure, unions 和 enumerations 皆為型別的種類*
 
