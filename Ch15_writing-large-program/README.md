@@ -1,4 +1,4 @@
-# Note
+# C program: a modern approach Ch.15 note
 
 ## I. Source Files
 
