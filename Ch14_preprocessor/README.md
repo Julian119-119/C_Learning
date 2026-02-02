@@ -576,3 +576,66 @@
 		```c
 		#if !defined(identifier)
 		```
+<br><Br>
+
+## V. Miscellaneous Directives
+
+#### 一，The `#error` Directive
+
+- form:
+	```c
+	#error message
+	```
+- 當遇到 `#error` 時會進出 message 的訊息
+- E.g:
+	1. 與 `#if` 搭配
+		```c
+		#if INT_MAX < 100000
+		#error int type is too small
+		#endif
+		```
+	2. 與 `#else` 搭配
+		```c
+		#if defined(WIN32)
+		...
+		#elif defined(MAC_OS)
+		...
+		#elif defined(LINUX)
+		...
+		#else
+		#error No operating system specified
+		#endif
+		```
+<br>
+
+#### 二，The `#line` Directive
+
+- 用途：**替換程式所數出來的行數**
+- form:
+	1. 
+		```c
+		#line n
+		```
+	2. 
+		```c
+		#line n "file"
+		```
+- E.g:
+	```c
+	#line 10 "bar.c"
+	```
+	如果這一行的程式是在 foo.c 中的第五行的話，當它被程式偵測到有錯誤時，會偵測成在 bar.c 中的第 10 行
+<br>
+
+#### 三，The `#pragma` Directive
+
+- 寫給編譯器用的話，後面的 token ，並不是給 program 所運行的\
+- 通常是有特殊需求才會用的
+- form:
+	```c
+	#pragma tokens
+	```
+- E.g:
+	```C
+	#pragma data(heap_size => 1000, stack_size => 2000)
+	```
