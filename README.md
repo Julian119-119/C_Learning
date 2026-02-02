@@ -35,7 +35,7 @@
 | **12**  | Pointers and Arrays                     |   ✅    |    [view](./Ch12_pointers-and-arrays)    |
 | **13**  | Strings                                 |   ✅    |          [view](./Ch13_strings)          |
 | **14**  | The Preprocessor                        |   ✅    |       [view](./Ch14_preprocessor)        |
-| **15**  | Writing Large Programs                  |   ⬜    |                                          |
+| **15**  | Writing Large Programs                  |   ✅    |   [view](./Ch15_writing-large-program)   |
 | **16**  | Structures, Unions, and<br>Enumerations |   ⬜    |                                          |
 | **17**  | Advanced Uses of Pointers               |   ⬜    |                                          |
 
