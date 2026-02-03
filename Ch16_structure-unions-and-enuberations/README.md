@@ -1,6 +1,6 @@
 # C program: a modern approach Ch.16 note
 
-# Program overview
+## Program overview
 
 
 | 題號  | 功能           | 觀念                        | 連結                          |
@@ -9,7 +9,8 @@
 <br><Br>
 
 ---
-## I. Structure Variables
+## Note
+### I. Structure Variables
 
 #### 一，Intro
 
@@ -124,7 +125,7 @@
 - 缺點：未來**無法被新增新的 structure**，就算重新宣告一次也會因為 compatible 的限制而**無法被複製**
 <br><br>
 
-## II. Structure Types
+### II. Structure Types
 
 #### 一，Declaring a Structure Tag
 
@@ -243,7 +244,7 @@
 		```
 <br>
 
-## III. Nested Arrays and Structures
+### III. Nested Arrays and Structures
 
 #### 一, Nested Structures
 
