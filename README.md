@@ -37,7 +37,7 @@
 | **14**  | The Preprocessor                        |   ✅    |           [view](./Ch14_preprocessor)            |
 | **15**  | Writing Large Programs                  |   ✅    |       [view](./Ch15_writing-large-program)       |
 | **16**  | Structures, Unions, and<br>Enumerations |   ✅    | [view](./Ch16_structure-unions-and-enuberations) |
-| **17**  | Advanced Uses of Pointers               |   🔄   |     [view](./Ch17_advanced-uses-of-pointer)      |
+| **17**  | Advanced Uses of Pointers               |   ✅    |     [view](./Ch17_advanced-uses-of-pointer)      |
 
 
 *(符號說明：✅ 完成 / 🔄 進行中 / ⬜ 尚未開始)*
